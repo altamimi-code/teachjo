@@ -1,0 +1,2242 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TeachJo | منصة توظيف المعلمين بالذكاء الاصطناعي</title>
+<script src="https://cdn.tailwindcss.com/3.4.1/tailwind.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap&display=swap" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet"></noscript>
+<script src="https://unpkg.com/lucide@0.263.1/dist/umd/lucide.min.js" defer onload="if(typeof lucide!=='undefined')lucide.createIcons()"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" onload="emailjs.init('9afxQZ5Wx2t4mPe3-')"></script>
+<!-- Google Maps loads only when teacher dashboard opens -->
+<style>
+  *{font-family:'Cairo',sans-serif}
+  body{background:#F8FAFC}
+  .glass{background:rgba(255,255,255,0.93);backdrop-filter:blur(12px);border:1px solid rgba(226,232,240,0.8)}
+  .hero-bg{background:radial-gradient(circle at top right,rgba(37,99,235,0.08),transparent 45%),radial-gradient(circle at bottom left,rgba(16,185,129,0.08),transparent 45%),#F8FAFC}
+  .page{display:none}.page.active{display:block}
+  .tab-active{background:#0F172A;color:#fff}
+  .tab-inactive{color:#475569}
+  .stat-card{background:linear-gradient(135deg,#0F172A,#1e3a5f)}
+  input,select,textarea{font-family:'Cairo',sans-serif!important}
+  .spinner{border:3px solid #e2e8f0;border-top-color:#2563EB;border-radius:50%;animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .fade-in{animation:fadeIn .3s ease}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .badge-green{background:#ecfdf5;color:#059669;border:1px solid #a7f3d0}
+  .badge-blue{background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe}
+  .badge-red{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
+  .badge-yellow{background:#fffbeb;color:#d97706;border:1px solid #fde68a}
+  ::-webkit-scrollbar{width:6px;height:6px}
+  ::-webkit-scrollbar-track{background:#f1f5f9}
+  ::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
+  .notif-dot{position:absolute;top:-2px;right:-2px;width:8px;height:8px;background:#ef4444;border-radius:50%;border:2px solid white}
+</style>
+</head>
+<body class="text-slate-800 antialiased" id="app-body">
+
+<!-- Toast -->
+<div id="toast-wrap" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-[200] flex flex-col gap-2 items-center pointer-events-none w-full px-4 max-w-sm"></div>
+
+<!-- Loading Screen -->
+<div id="loading-screen" class="fixed inset-0 bg-white z-[300] flex-col items-center justify-center gap-5 hidden">
+  <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#0F172A] via-[#2563EB] to-[#10B981] flex items-center justify-center shadow-xl">
+    <i data-lucide="graduation-cap" class="w-7 h-7 text-white"></i>
+  </div>
+  <div class="text-2xl font-black text-[#0F172A]">Teach<span class="text-[#2563EB]">Jo</span></div>
+  <div class="spinner w-8 h-8"></div>
+  <p class="text-sm text-slate-500 font-semibold" id="loading-msg">جاري الاتصال بقاعدة البيانات...</p>
+</div>
+
+<!-- Contract Modal -->
+<div id="contract-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4" style="background:rgba(15,23,42,0.7);backdrop-filter:blur(4px)">
+  <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg fade-in overflow-hidden">
+    <div class="bg-[#0F172A] p-6 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-[#2563EB] flex items-center justify-center"><i data-lucide="file-signature" class="w-5 h-5 text-white"></i></div>
+        <div><h3 class="font-black text-white">عقد عمل رقمي</h3><p class="text-xs text-slate-400">TeachJo — وفق قانون العمل الأردني</p></div>
+      </div>
+      <button onclick="closeContractModal()" class="text-slate-400 hover:text-white cursor-pointer"><i data-lucide="x" class="w-5 h-5"></i></button>
+    </div>
+    <div class="p-6 space-y-4 max-h-[60vh] overflow-y-auto" id="contract-content">
+      <!-- Dynamic contract content -->
+    </div>
+    <div class="p-5 border-t border-slate-100 flex gap-3">
+      <button onclick="signContract()" id="sign-btn" class="flex-1 py-3 rounded-xl bg-[#10B981] hover:bg-emerald-600 text-white font-black cursor-pointer transition-all flex items-center justify-center gap-2">
+        <i data-lucide="pen-line" class="w-4 h-4"></i> توقيع العقد رقمياً
+      </button>
+      <button onclick="closeContractModal()" class="px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold cursor-pointer">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- Notifications Panel -->
+<div id="notif-panel" class="fixed top-[70px] left-4 z-50 hidden w-80 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden fade-in">
+  <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+    <h3 class="font-extrabold text-[#0F172A] text-sm">الإشعارات</h3>
+    <button onclick="markAllRead()" class="text-xs text-[#2563EB] font-bold cursor-pointer hover:underline">قراءة الكل</button>
+  </div>
+  <div id="notif-list" class="max-h-80 overflow-y-auto divide-y divide-slate-50">
+    <p class="text-sm text-slate-400 text-center py-6">لا توجد إشعارات</p>
+  </div>
+</div>
+
+<!-- Header -->
+<header id="main-header" class="sticky top-0 z-40 glass shadow-sm">
+  <div class="max-w-7xl mx-auto px-4 h-[70px] flex items-center justify-between gap-4">
+    <button onclick="navigate('home')" class="flex items-center gap-2.5 cursor-pointer">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0F172A] via-[#2563EB] to-[#10B981] flex items-center justify-center shadow">
+        <i data-lucide="graduation-cap" class="w-5 h-5 text-white"></i>
+      </div>
+      <div>
+        <span class="text-xl font-black text-[#0F172A]">Teach<span class="text-[#2563EB]">Jo</span></span>
+        <span class="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 mr-1.5">AI HR</span>
+      </div>
+    </button>
+    <nav class="hidden md:flex items-center gap-5 text-sm font-bold text-slate-600">
+      <button onclick="navigate('home')" class="hover:text-[#2563EB] transition-colors cursor-pointer" data-i18n="nav_home">الرئيسية</button>
+      <button onclick="navigate('home','#features')" class="hover:text-[#2563EB] transition-colors cursor-pointer" data-i18n="nav_features">المزايا</button>
+      <button onclick="navigate('home','#pricing')" class="hover:text-[#2563EB] transition-colors cursor-pointer" data-i18n="nav_pricing">الأسعار</button>
+    </nav>
+    <div class="flex items-center gap-2" id="auth-buttons"></div>
+    <!-- Language Toggle -->
+    <button onclick="toggleLang()" id="lang-btn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-sm font-bold text-slate-700 cursor-pointer transition-all shadow-sm">
+      <i data-lucide="globe" class="w-4 h-4 text-[#2563EB]"></i>
+      <span id="lang-label">EN</span>
+    </button>
+  </div>
+</header>
+
+<!-- PAGE: HOME -->
+<div id="page-home" class="page active">
+  <section class="hero-bg pt-12 pb-20 lg:pt-20 lg:pb-28 border-b border-slate-200/70">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-12 gap-12 items-center">
+        <div class="lg:col-span-7 space-y-6 text-center lg:text-start">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-[#2563EB] text-xs sm:text-sm font-bold">
+            <span class="w-2 h-2 rounded-full bg-[#10B981] animate-pulse"></span>
+            <span class="hero-badge-text">مُصمم خصيصاً لأكثر من 1,500 مدرسة خاصة في الأردن 🇯🇴</span>
+          </div>
+          <h1 id="hero-title" class="text-3xl sm:text-5xl lg:text-[52px] font-black text-[#0F172A] leading-[1.2] tracking-tight">
+            منصة التوظيف الذكية للمعلمين والمدارس في الأردن
+          </h1>
+          <p id="hero-desc" class="text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+            وداعاً لفوضى الإعلانات والجروبات العشوائية. يرشح لك الذكاء الاصطناعي المعلم الأنسب خلال ساعات، مع عقود رقمية عادلة تحمي الطرفين.
+          </p>
+          <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-2">
+            <button id="btn-hero-teacher" onclick="navigate('register','teacher')" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded-2xl bg-[#0F172A] hover:bg-slate-800 text-white font-bold text-base shadow-lg transition-all cursor-pointer">
+              <i data-lucide="user-plus" class="w-5 h-5 text-[#10B981]"></i> سجّل كمعلم (مجاناً)
+            </button>
+            <button id="btn-hero-school" onclick="navigate('register','school')" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded-2xl bg-white hover:bg-slate-50 text-[#0F172A] border border-slate-200 font-bold text-base shadow-sm transition-all cursor-pointer">
+              <i data-lucide="building-2" class="w-5 h-5 text-[#2563EB]"></i> سجّل مدرستك
+            </button>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 text-xs font-bold text-slate-600">
+            <div class="flex items-center gap-2 bg-white/80 p-2.5 rounded-xl border border-slate-200/70"><i data-lucide="zap" class="w-4 h-4 text-[#2563EB] shrink-0"></i>ترشيح خلال ساعات</div>
+            <div class="flex items-center gap-2 bg-white/80 p-2.5 rounded-xl border border-slate-200/70"><i data-lucide="file-signature" class="w-4 h-4 text-[#10B981] shrink-0"></i>عقود رقمية</div>
+            <div class="flex items-center gap-2 bg-white/80 p-2.5 rounded-xl border border-slate-200/70"><i data-lucide="shield-check" class="w-4 h-4 text-[#2563EB] shrink-0"></i>حماية من الفصل</div>
+            <div class="flex items-center gap-2 bg-white/80 p-2.5 rounded-xl border border-slate-200/70"><i data-lucide="users" class="w-4 h-4 text-[#10B981] shrink-0"></i>بنك احتياط يومي</div>
+          </div>
+        </div>
+        <div class="lg:col-span-5">
+          <div class="bg-white rounded-3xl shadow-2xl shadow-slate-900/10 border border-slate-200/80 p-6 space-y-5 fade-in">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-50 text-[#2563EB] flex items-center justify-center"><i data-lucide="cpu" class="w-5 h-5"></i></div>
+                <div><h3 id="ai-engine-title" class="font-bold text-[#0F172A] text-sm">محرك المطابقة الذكي</h3><p id="ai-engine-desc" class="text-xs text-slate-400">تحليل الكفاءة + الموقع + الاستقرار</p></div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-emerald-50 text-[#10B981] text-xs font-extrabold">Live AI</span>
+            </div>
+            <div class="grid grid-cols-3 gap-3">
+              <div class="p-3 rounded-2xl stat-card text-white text-center">
+                <div class="text-2xl font-black text-[#10B981]" id="stat-teachers">...</div>
+                <div id="stat-teachers-label" class="text-[11px] text-slate-300 mt-0.5">معلم مسجل</div>
+              </div>
+              <div class="p-3 rounded-2xl bg-slate-100 text-[#0F172A] text-center">
+                <div class="text-2xl font-black text-[#2563EB]" id="stat-schools-count">...</div>
+                <div id="stat-schools-label" class="text-[11px] text-slate-600 mt-0.5">مدرسة مشتركة</div>
+              </div>
+              <div class="p-3 rounded-2xl bg-slate-100 text-[#0F172A] text-center">
+                <div class="text-2xl font-black text-[#10B981]" id="stat-jobs">...</div>
+                <div id="stat-jobs-label" class="text-[11px] text-slate-600 mt-0.5">وظيفة نشطة</div>
+              </div>
+            </div>
+            <div id="latest-teachers-home" class="space-y-2.5"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features" class="py-20 bg-white border-b border-slate-200/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-14 space-y-3">
+        <span id="feat-badge" class="inline-block px-3.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold">حوكمة ذكية تضمن حق الطرفين</span>
+        <h2 id="feat-title" class="text-2xl sm:text-4xl font-black text-[#0F172A]">لماذا تثق المدارس والمعلمون في TeachJo؟</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-[#F8FAFC] rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+          <div class="w-12 h-12 rounded-2xl bg-blue-50 text-[#2563EB] flex items-center justify-center"><i data-lucide="video" class="w-6 h-6"></i></div>
+          <h3 id="feat1-title" class="text-lg font-extrabold text-[#0F172A]">تقييم الفيديو الذكي (60 ثانية)</h3>
+          <p id="feat1-desc" class="text-sm text-slate-600">يسجل المعلم مقطعاً قصيراً. يحلل الذكاء الاصطناعي وضوح الشرح وطلاقة اللغة قبل المقابلة.</p>
+        </div>
+        <div class="bg-[#F8FAFC] rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-[#10B981] flex items-center justify-center"><i data-lucide="scale" class="w-6 h-6"></i></div>
+          <h3 id="feat2-title" class="text-lg font-extrabold text-[#0F172A]">ضمان البديل بشرط العدالة</h3>
+          <p id="feat2-desc" class="text-sm text-slate-600">المدرسة تحصل على بديل مجاني عند استقالة المعلم. الفصل التعسفي يُسقط هذا الحق علناً.</p>
+        </div>
+        <div class="bg-[#F8FAFC] rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+          <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center"><i data-lucide="calendar-clock" class="w-6 h-6"></i></div>
+          <h3 id="feat3-title" class="text-lg font-extrabold text-[#0F172A]">بنك المعلمين الاحتياط</h3>
+          <p id="feat3-desc" class="text-sm text-slate-600">معلم احتياط معتمد ليوم أو أسبوع بضغطة زر، دون تهديد وظيفة المعلم الأصلي.</p>
+        </div>
+        <div class="bg-[#F8FAFC] rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+          <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center"><i data-lucide="file-signature" class="w-6 h-6"></i></div>
+          <h3 id="feat4-title" class="text-lg font-extrabold text-[#0F172A]">عقود رقمية محمية</h3>
+          <p id="feat4-desc" class="text-sm text-slate-600">عقد إلكتروني وفق قانون العمل الأردني مع توقيع رقمي فوري يحمي الطرفين.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-12 space-y-3">
+        <span id="price-badge" class="inline-block px-3.5 py-1 rounded-full bg-blue-50 text-[#2563EB] text-xs font-extrabold">قسم HR متكامل بتكلفة أقل من راتب موظف واحد</span>
+        <h2 id="price-title" class="text-2xl sm:text-4xl font-black text-[#0F172A]">باقات اشتراك مرنة للمدارس الخاصة</h2>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="bg-[#F8FAFC] rounded-3xl p-8 border border-slate-200 flex flex-col shadow-sm">
+          <h3 id="plan1-name" class="text-xl font-extrabold text-[#0F172A]">الباقة الأساسية</h3>
+          <div class="my-6"><span class="text-4xl font-black text-[#0F172A]">79</span><span id="plan1-currency" class="text-sm font-bold text-slate-500 mr-1">دينار أردني / شهرياً</span></div>
+          <ul class="space-y-3 text-sm text-slate-600 flex-1">
+            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-[#10B981] shrink-0"></i><span id="plan1-f1">توظيف حتى 5 معلمين سنوياً</span></li>
+            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-[#10B981] shrink-0"></i><span id="plan1-f2">فلترة بالذكاء الاصطناعي والموقع</span></li>
+            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-[#10B981] shrink-0"></i><span id="plan1-f3">عقود رقمية موحدة</span></li>
+          </ul>
+          <button id="plan1-btn" onclick="navigate('register','school')" class="mt-8 w-full py-3.5 rounded-xl border-2 border-[#0F172A] text-[#0F172A] hover:bg-[#0F172A] hover:text-white font-bold text-sm transition-all cursor-pointer">ابدأ بأول معلم مجاناً</button>
+        </div>
+        <div class="bg-[#0F172A] text-white rounded-3xl p-8 border-2 border-[#2563EB] flex flex-col shadow-xl relative">
+          <div id="plan2-badge" class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-[#2563EB] text-white text-xs font-extrabold shadow">الأكثر طلباً</div>
+          <h3 id="plan2-name" class="text-xl font-extrabold">Pro HR Suite</h3>
+          <div class="my-6"><span class="text-4xl font-black text-[#10B981]">149</span><span id="plan2-currency" class="text-sm font-bold text-slate-300 mr-1">دينار أردني / شهرياً</span></div>
+          <ul class="space-y-3 text-sm text-slate-200 flex-1">
+            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-[#10B981] shrink-0"></i><span id="plan2-f1">توظيف غير محدود</span></li>
+            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-[#10B981] shrink-0"></i><span id="plan2-f2">عقود رقمية متقدمة</span></li>
+            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-[#10B981] shrink-0"></i><span id="plan2-f3">ضمان البديل الفوري 48 ساعة</span></li>
+            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-[#10B981] shrink-0"></i><span id="plan2-f4">بنك معلمي الاحتياط</span></li>
+          </ul>
+          <button id="plan2-btn" onclick="navigate('register','school')" class="mt-8 w-full py-3.5 rounded-xl bg-[#2563EB] hover:bg-blue-600 text-white font-bold text-sm shadow-lg transition-all cursor-pointer">تجربة مجانية 30 يوم</button>
+        </div>
+        <div class="bg-[#F8FAFC] rounded-3xl p-8 border border-slate-200 flex flex-col shadow-sm">
+          <h3 id="plan3-name" class="text-xl font-extrabold text-[#0F172A]">Enterprise Network</h3>
+          <div class="my-6"><span class="text-4xl font-black text-[#0F172A]">299</span><span id="plan3-currency" class="text-sm font-bold text-slate-500 mr-1">دينار أردني / شهرياً</span></div>
+          <ul class="space-y-3 text-sm text-slate-600 flex-1">
+            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-[#10B981] shrink-0"></i><span id="plan3-f1">إدارة مركزية لعدة فروع</span></li>
+            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-[#10B981] shrink-0"></i><span id="plan3-f2">مدير حساب مخصص</span></li>
+            <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-[#10B981] shrink-0"></i><span id="plan3-f3">ربط API مع أنظمة المدرسة</span></li>
+          </ul>
+          <button id="plan3-btn" onclick="navigate('register','school')" class="mt-8 w-full py-3.5 rounded-xl border-2 border-[#0F172A] text-[#0F172A] hover:bg-[#0F172A] hover:text-white font-bold text-sm transition-all cursor-pointer">تواصل مع فريق المبيعات</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-[#0F172A] text-slate-300 pt-14 pb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row justify-between gap-8 pb-8 border-b border-slate-800">
+        <div class="space-y-3 max-w-sm">
+          <div class="flex items-center gap-2"><div class="w-9 h-9 rounded-xl bg-[#2563EB] text-white flex items-center justify-center"><i data-lucide="graduation-cap" class="w-5 h-5"></i></div><span class="text-2xl font-black text-white">Teach<span class="text-[#2563EB]">Jo</span></span></div>
+          <p id="footer-desc" class="text-sm text-slate-400 leading-relaxed">المنصة الذكية الأولى لإدارة وتوظيف الكوادر التعليمية للمدارس الخاصة في الأردن.</p>
+        </div>
+        <div class="space-y-2">
+          <h4 id="footer-contact" class="text-white font-bold text-sm">تواصل معنا</h4>
+          <p class="text-sm flex items-center gap-2"><i data-lucide="mail" class="w-4 h-4 text-[#2563EB]"></i>hello@teachjo.com</p>
+          <p class="text-sm flex items-center gap-2"><i data-lucide="globe" class="w-4 h-4 text-[#10B981]"></i>teachjo.com</p>
+        </div>
+      </div>
+      <div class="pt-6 flex items-center justify-center text-xs text-slate-500">
+        <p>© 2026 TeachJo. جميع الحقوق محفوظة.</p>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- PAGE: REGISTER -->
+<div id="page-register" class="page min-h-screen bg-[#F8FAFC] flex items-center justify-center py-12 px-4">
+  <div class="w-full max-w-md space-y-6 fade-in">
+    <div class="text-center space-y-2">
+      <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#0F172A] via-[#2563EB] to-[#10B981] flex items-center justify-center shadow-xl mx-auto"><i data-lucide="graduation-cap" class="w-7 h-7 text-white"></i></div>
+      <h2 id="reg-title" class="text-2xl font-black text-[#0F172A]">إنشاء حساب في TeachJo</h2>
+    </div>
+    <div class="inline-flex w-full p-1.5 rounded-2xl bg-slate-200 gap-1" id="reg-type-tabs">
+      <button onclick="setRegType('teacher')" id="reg-tab-teacher" class="flex-1 py-2.5 rounded-xl text-sm font-bold transition-all cursor-pointer tab-active bg-white shadow"><i data-lucide="user" class="w-4 h-4 inline ml-1"></i> <span id="reg-tab-teacher-label">معلم</span></button>
+      <button onclick="setRegType('school')" id="reg-tab-school" class="flex-1 py-2.5 rounded-xl text-sm font-bold transition-all cursor-pointer tab-inactive"><i data-lucide="building-2" class="w-4 h-4 inline ml-1"></i> <span id="reg-tab-school-label">مدرسة</span></button>
+    </div>
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4">
+      <form id="form-teacher" onsubmit="registerUser(event,'teacher')" class="space-y-4">
+        <div><label class="block text-xs font-bold text-slate-700 mb-1">الاسم الكامل</label>
+          <input type="text" id="t-name" required placeholder="أ. محمد الخالد" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"></div>
+        <div><label class="block text-xs font-bold text-slate-700 mb-1">البريد الإلكتروني</label>
+          <input type="email" id="t-email" required placeholder="name@example.com" dir="ltr" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"></div>
+        <div><label class="block text-xs font-bold text-slate-700 mb-1">كلمة المرور</label>
+          <input type="password" id="t-pass" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"></div>
+        <div><label class="block text-xs font-bold text-slate-700 mb-1">التخصص</label>
+          <select id="t-subject" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none">
+            <option value="">اختر</option><option>الفيزياء</option><option>الرياضيات</option><option>الكيمياء</option><option>الأحياء</option><option>اللغة الإنجليزية</option><option>اللغة العربية</option><option>الحاسوب</option><option>معلم صف / أساسي</option>
+          </select></div>
+        <div class="grid grid-cols-2 gap-3">
+          <div><label class="block text-xs font-bold text-slate-700 mb-1">المحافظة</label>
+            <select id="t-area" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none">
+              <option value="">اختر</option><option>عمّان</option><option>إربد</option><option>الزرقاء</option><option>العقبة</option><option>البلقاء</option>
+            </select></div>
+          <div><label class="block text-xs font-bold text-slate-700 mb-1">سنوات الخبرة</label>
+            <select id="t-exp" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none">
+              <option value="">اختر</option><option>أقل من سنة</option><option>1-3 سنوات</option><option>4-6 سنوات</option><option>7-10 سنوات</option><option>أكثر من 10 سنوات</option>
+            </select></div>
+        </div>
+        <div><label class="block text-xs font-bold text-slate-700 mb-1">المنهاج</label>
+          <select id="t-curriculum" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none">
+            <option value="national">وطني أردني</option><option value="igcse">IGCSE</option><option value="american">أمريكي / IB</option><option value="both">متعدد المناهج</option>
+          </select></div>
+        <div><label class="block text-xs font-bold text-slate-700 mb-1">الراتب المتوقع (دينار / شهر)</label>
+          <input type="number" id="t-salary" placeholder="600" min="200" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"></div>
+        <div><label class="block text-xs font-bold text-slate-700 mb-1">📄 رفع السيرة الذاتية (PDF)</label>
+          <input type="file" id="t-cv" accept=".pdf" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none bg-white"></div>
+        <div><label class="block text-xs font-bold text-slate-700 mb-1">🎥 فيديو تعريفي (60 ثانية كحد أقصى)</label>
+          <input type="file" id="t-video" accept="video/*" capture="camcorder" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white focus:ring-2 focus:ring-[#2563EB] focus:outline-none">
+          <p class="text-xs text-slate-400 mt-1">سجّل مباشرة من كاميرا موبايلك أو اختر فيديو (max 60 ثانية)</p></div>
+        <button type="submit" id="btn-reg-teacher" class="w-full py-3 rounded-xl bg-[#0F172A] hover:bg-slate-800 text-white font-bold text-sm shadow cursor-pointer transition-all flex items-center justify-center gap-2">
+          <i data-lucide="user-plus" class="w-4 h-4"></i> إنشاء حساب معلم مجاناً
+        </button>
+      </form>
+      <form id="form-school" onsubmit="registerUser(event,'school')" class="space-y-4 hidden">
+        <div><label class="block text-xs font-bold text-slate-700 mb-1">اسم المدرسة</label>
+          <input type="text" id="s-name" required placeholder="مدارس النهضة الحديثة" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"></div>
+        <div><label class="block text-xs font-bold text-slate-700 mb-1">البريد الإلكتروني</label>
+          <input type="email" id="s-email" required placeholder="school@example.com" dir="ltr" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"></div>
+        <div><label class="block text-xs font-bold text-slate-700 mb-1">كلمة المرور</label>
+          <input type="password" id="s-pass" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"></div>
+        <div class="grid grid-cols-2 gap-3">
+          <div><label class="block text-xs font-bold text-slate-700 mb-1">المحافظة</label>
+            <select id="s-area" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none">
+              <option value="">اختر</option><option>عمّان</option><option>إربد</option><option>الزرقاء</option><option>العقبة</option>
+            </select></div>
+          <div><label class="block text-xs font-bold text-slate-700 mb-1">المنهاج</label>
+            <select id="s-curriculum" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none">
+              <option value="national">وطني</option><option value="igcse">IGCSE</option><option value="american">أمريكي/IB</option>
+            </select></div>
+        </div>
+        <div><label class="block text-xs font-bold text-slate-700 mb-1">رقم الهاتف</label>
+          <input type="tel" id="s-phone" required placeholder="+962 79 000 0000" dir="ltr" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"></div>
+        <button type="submit" id="btn-reg-school" class="w-full py-3 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white font-bold text-sm shadow cursor-pointer transition-all flex items-center justify-center gap-2">
+          <i data-lucide="building-2" class="w-4 h-4"></i> إنشاء حساب المدرسة
+        </button>
+      </form>
+    </div>
+    <p class="text-center text-sm text-slate-500"><span id="reg-have-account">لديك حساب؟</span> <button onclick="navigate('login')" class="text-[#2563EB] font-bold hover:underline cursor-pointer" id="reg-login-link">تسجيل دخول</button></p>
+  </div>
+</div>
+
+<!-- PAGE: LOGIN -->
+<div id="page-login" class="page min-h-screen bg-[#F8FAFC] flex items-center justify-center py-12 px-4">
+  <div class="w-full max-w-sm space-y-6 fade-in">
+    <div class="text-center space-y-2">
+      <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#0F172A] via-[#2563EB] to-[#10B981] flex items-center justify-center shadow-xl mx-auto"><i data-lucide="log-in" class="w-7 h-7 text-white"></i></div>
+      <h2 id="login-title" class="text-2xl font-black text-[#0F172A]">تسجيل الدخول</h2>
+    </div>
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
+      <form onsubmit="loginUser(event)" class="space-y-4">
+        <div><label class="block text-xs font-bold text-slate-700 mb-1">البريد الإلكتروني</label>
+          <input type="email" id="l-email" required placeholder="email@example.com" dir="ltr" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"></div>
+        <div><label class="block text-xs font-bold text-slate-700 mb-1">كلمة المرور</label>
+          <input type="password" id="l-pass" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"></div>
+        <button type="submit" id="login-btn" class="w-full py-3 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white font-bold text-sm shadow cursor-pointer transition-all">تسجيل الدخول</button>
+      </form>
+    </div>
+    <p class="text-center text-sm text-slate-500"><span id="login-no-account">ليس لديك حساب؟</span> <button onclick="navigate('register')" class="text-[#2563EB] font-bold hover:underline cursor-pointer" id="login-register-link">إنشاء حساب</button></p>
+  </div>
+</div>
+
+<!-- PAGE: TEACHER DASHBOARD -->
+<div id="page-teacher" class="page min-h-screen bg-[#F8FAFC]">
+  <div class="max-w-5xl mx-auto px-4 py-8 space-y-6">
+    <div class="bg-gradient-to-l from-[#2563EB]/10 to-[#10B981]/10 rounded-2xl p-5 border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div>
+        <h2 class="text-xl font-black text-[#0F172A]">مرحباً، <span id="teacher-welcome-name">أيها المعلم</span> 👋</h2>
+        <p class="text-sm text-slate-500 mt-0.5">لوحة تحكم المعلم — TeachJo</p>
+      </div>
+      <div class="flex items-center gap-2 flex-wrap">
+        <span id="teacher-status-badge" class="px-3 py-1 rounded-full text-xs font-extrabold badge-yellow">قيد المراجعة</span>
+        <button onclick="openEditProfile()" class="px-3 py-2 rounded-xl bg-[#2563EB] text-white text-xs font-bold cursor-pointer flex items-center gap-1.5 hover:bg-blue-700"><i data-lucide="pencil" class="w-3.5 h-3.5"></i> تعديل ملفي</button>
+        <button onclick="logoutUser()" class="px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-600 cursor-pointer flex items-center gap-1.5"><i data-lucide="log-out" class="w-3.5 h-3.5"></i> خروج</button>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm text-center"><div class="text-2xl font-black text-[#2563EB]" id="ts-views">0</div><div class="text-xs font-semibold text-slate-500 mt-1">مرات الظهور</div></div>
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm text-center"><div class="text-2xl font-black text-[#10B981]" id="ts-apps">0</div><div class="text-xs font-semibold text-slate-500 mt-1">طلبات وظيفة</div></div>
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm text-center"><div class="text-2xl font-black text-[#0F172A]" id="ts-interviews">0</div><div class="text-xs font-semibold text-slate-500 mt-1">مقابلات</div></div>
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm text-center"><div class="text-2xl font-black text-amber-500" id="ts-match">--%</div><div class="text-xs font-semibold text-slate-500 mt-1">نسبة التطابق</div></div>
+    </div>
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm">
+      <div class="flex items-center justify-between p-5 border-b border-slate-100">
+        <h3 class="font-extrabold text-[#0F172A] flex items-center gap-2"><i data-lucide="briefcase" class="w-5 h-5 text-[#2563EB]"></i>الوظائف المتاحة</h3>
+        <span id="jobs-count-badge" class="px-2.5 py-1 rounded-full bg-blue-50 text-[#2563EB] text-xs font-bold">تحميل...</span>
+      </div>
+      <div id="available-jobs" class="p-5 space-y-3"><div class="text-center py-8"><div class="spinner w-8 h-8 mx-auto"></div></div></div>
+    </div>
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm">
+      <div class="p-5 border-b border-slate-100"><h3 class="font-extrabold text-[#0F172A] flex items-center gap-2"><i data-lucide="send" class="w-5 h-5 text-[#10B981]"></i>طلباتي المقدمة</h3></div>
+      <div id="my-applications" class="p-5"><p class="text-sm text-slate-400 text-center py-4">لم تقدم على أي وظيفة بعد.</p></div>
+    </div>
+    <!-- CV & Video section -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm">
+      <div class="p-5 border-b border-slate-100"><h3 class="font-extrabold text-[#0F172A] flex items-center gap-2"><i data-lucide="file-text" class="w-5 h-5 text-[#2563EB]"></i>ملفي الشخصي</h3></div>
+      <div class="p-5 space-y-4">
+        <div id="teacher-cv-section">
+          <p class="text-xs font-bold text-slate-600 mb-2">📄 السيرة الذاتية</p>
+          <div id="cv-display" class="text-sm text-slate-400">لم يتم رفع سيرة ذاتية بعد.</div>
+          <div id="cv-ai-profile" class="hidden mt-3"></div>
+          <div class="mt-3">
+            <label class="block text-xs font-bold text-slate-600 mb-1">رفع / تحديث (PDF أو Word)</label>
+            <input type="file" id="cv-upload" accept=".pdf,.doc,.docx" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white">
+            <div id="cv-progress" class="hidden mt-2">
+              <div class="w-full bg-slate-100 rounded-full h-2"><div id="cv-progress-bar" class="bg-[#2563EB] h-2 rounded-full transition-all" style="width:0%"></div></div>
+              <p class="text-xs text-slate-500 mt-1" id="cv-progress-text">جاري الرفع والتحليل بالذكاء الاصطناعي...</p>
+            </div>
+            <button onclick="uploadCV()" class="mt-2 px-4 py-2 rounded-xl bg-[#2563EB] text-white text-xs font-bold cursor-pointer hover:bg-blue-700">📄 رفع وتحليل بالذكاء الاصطناعي</button>
+          </div>
+        </div>
+        <hr class="border-slate-100">
+        <div>
+          <p class="text-xs font-bold text-slate-600 mb-2">🎥 فيديو تعريفي (60 ثانية)</p>
+          <div id="video-display" class="text-sm text-slate-400 mb-2">لم يتم رفع فيديو بعد.</div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">رفع / تحديث الفيديو</label>
+            <input type="file" id="video-upload" accept="video/*" capture="camcorder" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white">
+            <div id="video-progress" class="hidden mt-2">
+              <div class="w-full bg-slate-100 rounded-full h-2"><div id="video-progress-bar" class="bg-[#10B981] h-2 rounded-full transition-all" style="width:0%"></div></div>
+              <p class="text-xs text-slate-500 mt-1" id="video-progress-text">جاري الرفع...</p>
+            </div>
+            <button onclick="uploadVideo()" class="mt-2 px-4 py-2 rounded-xl bg-[#10B981] text-white text-xs font-bold cursor-pointer hover:bg-emerald-600">🎥 رفع الفيديو</button>
+          </div>
+        </div>
+        <hr class="border-slate-100">
+        <div>
+          <p class="text-xs font-bold text-slate-600 mb-2">📍 موقعي والمدارس القريبة</p>
+          <div class="flex gap-2 mb-2 flex-wrap">
+            <button onclick="getMyGPSLocation()" class="px-3 py-2 rounded-xl bg-[#0F172A] text-white text-xs font-bold cursor-pointer hover:bg-slate-800 flex items-center gap-1.5">📍 تحديد موقعي تلقائياً</button>
+            <button onclick="showNearbySchools()" class="px-3 py-2 rounded-xl bg-[#10B981] text-white text-xs font-bold cursor-pointer hover:bg-emerald-600 flex items-center gap-1.5">🏫 المدارس القريبة (30 دقيقة)</button>
+            <button onclick="showAllSchoolsOnMap()" class="px-3 py-2 rounded-xl bg-[#2563EB] text-white text-xs font-bold cursor-pointer hover:bg-blue-700 flex items-center gap-1.5">🗺️ كل المدارس</button>
+          </div>
+          <div id="teacher-map" class="w-full h-64 rounded-xl overflow-hidden bg-slate-100 border border-slate-200"></div>
+          <div id="nearby-schools-list" class="mt-3 space-y-2 hidden"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Contracts section for teacher -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm">
+      <div class="p-5 border-b border-slate-100"><h3 class="font-extrabold text-[#0F172A] flex items-center gap-2"><i data-lucide="file-signature" class="w-5 h-5 text-amber-500"></i>عقودي الرقمية</h3></div>
+      <div id="my-contracts" class="p-5"><p class="text-sm text-slate-400 text-center py-4">لا توجد عقود بعد.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: SCHOOL DASHBOARD -->
+<div id="page-school" class="page min-h-screen bg-[#F8FAFC]">
+  <div class="max-w-6xl mx-auto px-4 py-8 space-y-6">
+    <div class="bg-gradient-to-l from-[#2563EB]/10 to-transparent rounded-2xl p-5 border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div>
+        <h2 class="text-xl font-black text-[#0F172A]">لوحة تحكم: <span id="school-welcome-name">مدرستنا</span></h2>
+        <p class="text-sm text-slate-500 mt-0.5">نظام إدارة الموارد البشرية — TeachJo</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="px-3 py-1 rounded-full text-xs font-extrabold badge-green">باقة Pro</span>
+        <button onclick="logoutUser()" class="px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-600 cursor-pointer flex items-center gap-1.5"><i data-lucide="log-out" class="w-3.5 h-3.5"></i> خروج</button>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm text-center"><div class="text-2xl font-black text-[#2563EB]" id="ss-teachers">0</div><div class="text-xs font-semibold text-slate-500 mt-1">معلم نشط</div></div>
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm text-center"><div class="text-2xl font-black text-[#10B981]" id="ss-jobs">0</div><div class="text-xs font-semibold text-slate-500 mt-1">وظيفة منشورة</div></div>
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm text-center"><div class="text-2xl font-black text-[#0F172A]" id="ss-apps">0</div><div class="text-xs font-semibold text-slate-500 mt-1">طلب وصل</div></div>
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm text-center"><div class="text-2xl font-black text-[#10B981]" id="ss-contracts">0</div><div class="text-xs font-semibold text-slate-500 mt-1">عقد موقع</div></div>
+    </div>
+    <!-- Post Job -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm">
+      <button onclick="toggleSection('post-job-form')" class="w-full flex items-center justify-between p-5 cursor-pointer hover:bg-slate-50 rounded-2xl transition-colors">
+        <h3 class="font-extrabold text-[#0F172A] flex items-center gap-2"><i data-lucide="plus-circle" class="w-5 h-5 text-[#10B981]"></i>نشر وظيفة جديدة</h3>
+        <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400" id="icon-post-job-form"></i>
+      </button>
+      <div id="post-job-form" class="hidden px-5 pb-5">
+        <form onsubmit="postJob(event)" class="space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div><label class="block text-xs font-bold text-slate-700 mb-1">المادة</label>
+              <select id="j-subject" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none">
+                <option value="">اختر</option><option>الفيزياء</option><option>الرياضيات</option><option>الكيمياء</option><option>الأحياء</option><option>اللغة الإنجليزية</option><option>اللغة العربية</option><option>الحاسوب</option><option>معلم صف / أساسي</option>
+              </select></div>
+            <div><label class="block text-xs font-bold text-slate-700 mb-1">المرحلة</label>
+              <select id="j-level" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none">
+                <option value="">اختر</option><option>روضة / أساسي (1-4)</option><option>أساسي (5-10)</option><option>ثانوي (11-12)</option><option>جميع المراحل</option>
+              </select></div>
+            <div><label class="block text-xs font-bold text-slate-700 mb-1">المنهاج</label>
+              <select id="j-curriculum" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none">
+                <option value="national">وطني</option><option value="igcse">IGCSE</option><option value="american">أمريكي/IB</option>
+              </select></div>
+            <div><label class="block text-xs font-bold text-slate-700 mb-1">نوع التعيين</label>
+              <select id="j-type" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none">
+                <option value="fulltime">دوام كامل</option><option value="parttime">جزئي</option><option value="sub">احتياط</option>
+              </select></div>
+            <div><label class="block text-xs font-bold text-slate-700 mb-1">الراتب من (دينار)</label>
+              <input type="number" id="j-salary-min" placeholder="400" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"></div>
+            <div><label class="block text-xs font-bold text-slate-700 mb-1">الراتب إلى (دينار)</label>
+              <input type="number" id="j-salary-max" placeholder="700" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"></div>
+          </div>
+          <button type="submit" class="px-6 py-3 rounded-xl bg-[#10B981] hover:bg-emerald-600 text-white font-bold text-sm cursor-pointer transition-all flex items-center gap-2">
+            <i data-lucide="send" class="w-4 h-4"></i> نشر الوظيفة
+          </button>
+        </form>
+      </div>
+    </div>
+    <!-- Applications -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm">
+      <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+        <h3 class="font-extrabold text-[#0F172A] flex items-center gap-2"><i data-lucide="users" class="w-5 h-5 text-[#2563EB]"></i>الطلبات الواردة</h3>
+        <button onclick="loadSchoolApplications()" class="text-xs text-[#2563EB] font-bold cursor-pointer hover:underline">تحديث</button>
+      </div>
+      <div id="school-applications" class="p-5"><div class="text-center py-6 text-sm text-slate-400">لا توجد طلبات بعد.</div></div>
+    </div>
+    <!-- AI Matching -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm">
+      <div class="p-5 border-b border-slate-100">
+        <h3 class="font-extrabold text-[#0F172A] flex items-center gap-2"><i data-lucide="sparkles" class="w-5 h-5 text-amber-500"></i>المطابقة الذكية</h3>
+      </div>
+      <div class="p-5">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+          <select id="match-subject" class="px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none">
+            <option value="">جميع التخصصات</option><option>الفيزياء</option><option>الرياضيات</option><option>اللغة الإنجليزية</option><option>الكيمياء</option><option>معلم صف / أساسي</option>
+          </select>
+          <select id="match-area" class="px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none">
+            <option value="">جميع المحافظات</option><option>عمّان</option><option>إربد</option><option>الزرقاء</option>
+          </select>
+          <button onclick="loadTeacherPool()" class="px-4 py-2.5 rounded-xl bg-[#2563EB] text-white font-bold text-sm cursor-pointer hover:bg-blue-700 flex items-center justify-center gap-2">
+            <i data-lucide="search" class="w-4 h-4"></i> ترشيح ذكي
+          </button>
+        </div>
+        <div id="teacher-pool" class="space-y-3"></div>
+      </div>
+    </div>
+    <!-- School Contracts -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm">
+      <div class="p-5 border-b border-slate-100"><h3 class="font-extrabold text-[#0F172A] flex items-center gap-2"><i data-lucide="file-signature" class="w-5 h-5 text-[#10B981]"></i>العقود الرقمية</h3></div>
+      <div id="school-contracts" class="p-5"><p class="text-sm text-slate-400 text-center py-4">لا توجد عقود بعد. اقبل طلباً لإنشاء عقد رقمي.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: ADMIN -->
+<div id="page-admin" class="page min-h-screen bg-slate-900 text-white">
+  <div class="flex h-screen">
+    <aside class="w-64 bg-[#0F172A] border-l border-slate-800 flex-col shrink-0 hidden md:flex">
+      <div class="p-5 border-b border-slate-800">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-[#2563EB] flex items-center justify-center"><i data-lucide="graduation-cap" class="w-5 h-5 text-white"></i></div>
+          <span class="text-xl font-black">Teach<span class="text-[#2563EB]">Jo</span></span>
+          <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-red-900 text-red-300 font-bold">Admin</span>
+        </div>
+      </div>
+      <nav class="flex-1 p-4 space-y-1">
+        <button onclick="adminTab('overview')" id="atab-overview" class="admin-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-white bg-[#2563EB] cursor-pointer transition-all"><i data-lucide="layout-dashboard" class="w-4 h-4"></i>نظرة عامة</button>
+        <button onclick="adminTab('teachers')" id="atab-teachers" class="admin-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer transition-all"><i data-lucide="users" class="w-4 h-4"></i>المعلمون</button>
+        <button onclick="adminTab('schools')" id="atab-schools" class="admin-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer transition-all"><i data-lucide="building-2" class="w-4 h-4"></i>المدارس</button>
+        <button onclick="adminTab('jobs')" id="atab-jobs" class="admin-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer transition-all"><i data-lucide="briefcase" class="w-4 h-4"></i>الوظائف</button>
+        <button onclick="adminTab('contracts')" id="atab-contracts" class="admin-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer transition-all"><i data-lucide="file-signature" class="w-4 h-4"></i>العقود</button>
+        <button onclick="adminTab('notifications')" id="atab-notifications" class="admin-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer transition-all"><i data-lucide="bell" class="w-4 h-4"></i>الإشعارات</button>
+        <button onclick="adminTab('settings')" id="atab-settings" class="admin-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer transition-all"><i data-lucide="settings" class="w-4 h-4"></i>الإعدادات</button>
+      </nav>
+      <div class="p-4 border-t border-slate-800">
+        <button onclick="logoutUser()" class="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer"><i data-lucide="log-out" class="w-4 h-4"></i>تسجيل الخروج</button>
+      </div>
+    </aside>
+    <main class="flex-1 overflow-auto">
+      <div class="md:hidden bg-[#0F172A] border-b border-slate-800 p-4 flex items-center justify-between">
+        <span class="font-black">TeachJo Admin</span>
+        <div class="flex gap-1">
+          <button onclick="adminTab('overview')" class="p-1.5 rounded text-slate-400 hover:text-white cursor-pointer"><i data-lucide="layout-dashboard" class="w-4 h-4"></i></button>
+          <button onclick="adminTab('teachers')" class="p-1.5 rounded text-slate-400 hover:text-white cursor-pointer"><i data-lucide="users" class="w-4 h-4"></i></button>
+          <button onclick="adminTab('schools')" class="p-1.5 rounded text-slate-400 hover:text-white cursor-pointer"><i data-lucide="building-2" class="w-4 h-4"></i></button>
+          <button onclick="adminTab('contracts')" class="p-1.5 rounded text-slate-400 hover:text-white cursor-pointer"><i data-lucide="file-signature" class="w-4 h-4"></i></button>
+          <button onclick="logoutUser()" class="p-1.5 rounded text-slate-400 hover:text-white cursor-pointer"><i data-lucide="log-out" class="w-4 h-4"></i></button>
+        </div>
+      </div>
+      <div class="p-6 space-y-6">
+        <div id="admin-overview" class="admin-panel fade-in">
+          <div class="flex items-center justify-between mb-6">
+            <h1 class="text-2xl font-black">لوحة التحكم — TeachJo Admin</h1>
+          </div>
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6" id="admin-kpis"></div>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-slate-800 rounded-2xl p-5"><h3 class="font-bold mb-4 text-sm text-slate-300">آخر المعلمين</h3><div id="recent-teachers-list" class="space-y-2 text-sm"></div></div>
+            <div class="bg-slate-800 rounded-2xl p-5"><h3 class="font-bold mb-4 text-sm text-slate-300">آخر المدارس</h3><div id="recent-schools-list" class="space-y-2 text-sm"></div></div>
+          </div>
+        </div>
+        <div id="admin-teachers" class="admin-panel hidden fade-in">
+          <div class="flex items-center justify-between mb-5">
+            <h2 class="text-xl font-black">إدارة المعلمين</h2>
+            <input id="search-teachers" oninput="filterAdminList('teachers')" placeholder="بحث..." class="px-3.5 py-2 rounded-xl bg-slate-800 border border-slate-700 text-sm text-white focus:ring-2 focus:ring-[#2563EB] focus:outline-none w-48">
+          </div>
+          <div class="bg-slate-800 rounded-2xl overflow-hidden"><div id="admin-teachers-table" class="divide-y divide-slate-700"></div></div>
+        </div>
+        <div id="admin-schools" class="admin-panel hidden fade-in">
+          <div class="flex items-center justify-between mb-5">
+            <h2 class="text-xl font-black">إدارة المدارس</h2>
+            <input id="search-schools" oninput="filterAdminList('schools')" placeholder="بحث..." class="px-3.5 py-2 rounded-xl bg-slate-800 border border-slate-700 text-sm text-white focus:ring-2 focus:ring-[#2563EB] focus:outline-none w-48">
+          </div>
+          <div class="bg-slate-800 rounded-2xl overflow-hidden"><div id="admin-schools-table" class="divide-y divide-slate-700"></div></div>
+        </div>
+        <div id="admin-jobs" class="admin-panel hidden fade-in">
+          <h2 class="text-xl font-black mb-5">الوظائف المنشورة</h2>
+          <div class="bg-slate-800 rounded-2xl overflow-hidden"><div id="admin-jobs-table" class="divide-y divide-slate-700"></div></div>
+        </div>
+        <div id="admin-contracts" class="admin-panel hidden fade-in">
+          <h2 class="text-xl font-black mb-5">العقود الرقمية</h2>
+          <div class="bg-slate-800 rounded-2xl overflow-hidden"><div id="admin-contracts-table" class="divide-y divide-slate-700"></div></div>
+        </div>
+        <div id="admin-notifications" class="admin-panel hidden fade-in">
+          <div class="flex items-center justify-between mb-5">
+            <h2 class="text-xl font-black">إرسال إشعار للمستخدمين</h2>
+          </div>
+          <div class="bg-slate-800 rounded-2xl p-6 space-y-4">
+            <div><label class="block text-xs font-bold text-slate-300 mb-1">المستلم</label>
+              <select id="notif-target" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-700 border border-slate-600 text-white text-sm focus:outline-none">
+                <option value="all">الجميع</option><option value="teachers">المعلمون فقط</option><option value="schools">المدارس فقط</option>
+              </select></div>
+            <div><label class="block text-xs font-bold text-slate-300 mb-1">عنوان الإشعار</label>
+              <input type="text" id="notif-title" placeholder="مثال: تحديث جديد في المنصة" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-700 border border-slate-600 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB]"></div>
+            <div><label class="block text-xs font-bold text-slate-300 mb-1">نص الإشعار</label>
+              <textarea id="notif-body" rows="3" placeholder="اكتب نص الإشعار هنا..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-700 border border-slate-600 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB] resize-none"></textarea></div>
+            <button onclick="sendAdminNotification()" class="px-6 py-3 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white font-bold text-sm cursor-pointer transition-all flex items-center gap-2">
+              <i data-lucide="bell" class="w-4 h-4"></i> إرسال الإشعار
+            </button>
+          </div>
+          <div class="mt-6 bg-slate-800 rounded-2xl p-5">
+            <h3 class="font-bold mb-4 text-sm text-slate-300">سجل الإشعارات المرسلة</h3>
+            <div id="admin-notif-log" class="space-y-2 text-sm text-slate-400"><p class="text-center py-4">لا توجد إشعارات مرسلة بعد.</p></div>
+          </div>
+        </div>
+        <div id="admin-settings" class="admin-panel hidden fade-in">
+          <h2 class="text-xl font-black mb-5">إعدادات الموقع</h2>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-slate-800 rounded-2xl p-6 space-y-4">
+              <h3 class="font-bold text-slate-300 flex items-center gap-2"><i data-lucide="dollar-sign" class="w-4 h-4 text-[#10B981]"></i>أسعار الباقات (دينار)</h3>
+              <div><label class="block text-xs text-slate-400 mb-1">الباقة الأساسية</label><input id="set-price-starter" type="number" value="79" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-700 border border-slate-600 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB]"></div>
+              <div><label class="block text-xs text-slate-400 mb-1">Pro HR Suite</label><input id="set-price-pro" type="number" value="149" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-700 border border-slate-600 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB]"></div>
+              <div><label class="block text-xs text-slate-400 mb-1">Enterprise</label><input id="set-price-enterprise" type="number" value="299" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-700 border border-slate-600 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB]"></div>
+              <button onclick="saveSettings()" class="w-full py-2.5 rounded-xl bg-[#10B981] hover:bg-emerald-600 text-white font-bold text-sm cursor-pointer transition-all">حفظ الأسعار</button>
+            </div>
+            <div class="bg-slate-800 rounded-2xl p-6 space-y-4">
+              <h3 class="font-bold text-slate-300 flex items-center gap-2"><i data-lucide="type" class="w-4 h-4 text-[#2563EB]"></i>نصوص الصفحة الرئيسية</h3>
+              <div><label class="block text-xs text-slate-400 mb-1">العنوان الرئيسي</label><textarea id="set-hero-title" rows="2" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-700 border border-slate-600 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB] resize-none">نظام تشغيل الموارد البشرية الذكي للمدارس الخاصة في الأردن</textarea></div>
+              <div><label class="block text-xs text-slate-400 mb-1">الوصف</label><textarea id="set-hero-desc" rows="3" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-700 border border-slate-600 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB] resize-none">وداعاً لفوضى الإعلانات والجروبات العشوائية. يرشح لك الذكاء الاصطناعي المعلم الأنسب خلال ساعات.</textarea></div>
+              <div><label class="block text-xs text-slate-400 mb-1">بريد التواصل</label><input id="set-email" type="email" value="hello@teachjo.com" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-700 border border-slate-600 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB]"></div>
+              <button onclick="saveSettings()" class="w-full py-2.5 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white font-bold text-sm cursor-pointer transition-all">حفظ النصوص</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Firebase + App Script -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCeRV0wieNqfPOP9inmC1HT0ZyxP_JQBWM",
+  authDomain: "teachjo-131e9.firebaseapp.com",
+  projectId: "teachjo-131e9",
+  storageBucket: "teachjo-131e9.firebasestorage.app",
+  messagingSenderId: "1023419767290",
+  appId: "1:1023419767290:web:e71d4711483f909b1cec43",
+  measurementId: "G-JM63SX2433"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// Safe lucide wrapper — lucide loads deferred so may not be ready yet
+function safeIcons() { if(typeof lucide!=='undefined') lucide.createIcons(); }
+
+// ===================== GLOBALS =====================
+let currentUser = null;
+let allTeachers = [], allSchools = [], allJobs = [], allApplications = [], allContracts = [], allNotifications = [];
+let activeContract = null;
+
+// ===================== INIT =====================
+window.addEventListener('DOMContentLoaded', () => {
+  try {
+    const saved = sessionStorage.getItem('tj_user');
+    if(saved) { currentUser = JSON.parse(saved); afterLogin(); }
+    // page-home already has class "active" in HTML — no need to call navigate
+    updateAuthButtons();
+    if(typeof lucide !== 'undefined') lucide.createIcons();
+    document.addEventListener('click', (e)=>{
+      const panel = document.getElementById('notif-panel');
+      if(panel && !e.target.closest('#notif-panel') && !e.target.closest('#notif-btn'))
+        panel.classList.add('hidden');
+    });
+  } catch(e){ console.error('init error',e); }
+  // Seed & stats in background — never block UI
+  setTimeout(async()=>{
+    try { await seedDemoData(); loadHomeStats(); safeIcons(); } catch(e){}
+  }, 200);
+});
+
+// ===================== SEED =====================
+async function seedDemoData() {
+  // Cache in sessionStorage — avoids Firebase call on every page load
+  if(sessionStorage.getItem('tj_seeded')) return;
+  const adminRef = doc(db,"users","admin");
+  const snap = await getDoc(adminRef);
+  if (snap.exists()) { sessionStorage.setItem('tj_seeded','1'); return; }
+  const demoTeachers = [
+    {id:"t1",role:"teacher",name:"ريم العبداللات",email:"reem@ex.com",pass:"pass123",subject:"الفيزياء",area:"عمّان",exp:"7 سنوات",curriculum:"igcse",salary:700,matchScore:98,status:"approved",views:142,avatar:"ر.ع",createdAt:Date.now()},
+    {id:"t2",role:"teacher",name:"طارق الخصاونة",email:"tariq@ex.com",pass:"pass123",subject:"الرياضيات",area:"عمّان",exp:"9 سنوات",curriculum:"american",salary:800,matchScore:95,status:"approved",views:98,avatar:"ط.خ",createdAt:Date.now()},
+    {id:"t3",role:"teacher",name:"سارة المومني",email:"sara@ex.com",pass:"pass123",subject:"اللغة الإنجليزية",area:"إربد",exp:"5 سنوات",curriculum:"igcse",salary:600,matchScore:94,status:"approved",views:76,avatar:"س.م",createdAt:Date.now()},
+    {id:"t4",role:"teacher",name:"هبة الزعبي",email:"hiba@ex.com",pass:"pass123",subject:"معلم صف / أساسي",area:"الزرقاء",exp:"6 سنوات",curriculum:"national",salary:550,matchScore:92,status:"pending",views:34,avatar:"هـ.ز",createdAt:Date.now()}
+  ];
+  const demoSchools = [
+    {id:"s1",role:"school",name:"أكاديمية الرواد الدولية",email:"ruwad@ex.com",pass:"pass123",area:"عمّان",curriculum:"igcse",phone:"+962791234567",status:"active",plan:"pro",createdAt:Date.now()},
+    {id:"s2",role:"school",name:"مدارس الأفق الحديث",email:"ofuk@ex.com",pass:"pass123",area:"إربد",curriculum:"national",phone:"+962799876543",status:"active",plan:"starter",createdAt:Date.now()}
+  ];
+  const admin = {id:"admin",role:"admin",name:"Ahmad Altamimi",email:"admin@teachjo.com",pass:"admin123",status:"active",createdAt:Date.now()};
+  const demoJobs = [
+    {id:"j1",schoolId:"s1",schoolName:"أكاديمية الرواد الدولية",subject:"الفيزياء",level:"ثانوي",curriculum:"igcse",type:"fulltime",salaryMin:650,salaryMax:800,area:"عمّان",status:"active",applicants:2,createdAt:Date.now()},
+    {id:"j2",schoolId:"s2",schoolName:"مدارس الأفق الحديث",subject:"الرياضيات",level:"أساسي",curriculum:"national",type:"fulltime",salaryMin:500,salaryMax:620,area:"إربد",status:"active",applicants:1,createdAt:Date.now()},
+    {id:"j3",schoolId:"s1",schoolName:"أكاديمية الرواد الدولية",subject:"اللغة الإنجليزية",level:"جميع المراحل",curriculum:"igcse",type:"parttime",salaryMin:400,salaryMax:500,area:"عمّان",status:"active",applicants:1,createdAt:Date.now()}
+  ];
+  const demoApps = [
+    {id:"a1",jobId:"j1",teacherId:"t1",teacherName:"ريم العبداللات",teacherSubject:"الفيزياء",schoolId:"s1",schoolName:"أكاديمية الرواد الدولية",subject:"الفيزياء",status:"interview",createdAt:Date.now()},
+    {id:"a2",jobId:"j2",teacherId:"t3",teacherName:"سارة المومني",teacherSubject:"اللغة الإنجليزية",schoolId:"s2",schoolName:"مدارس الأفق الحديث",subject:"الرياضيات",status:"pending",createdAt:Date.now()}
+  ];
+  const demoContracts = [
+    {id:"c1",teacherId:"t1",teacherName:"ريم العبداللات",schoolId:"s1",schoolName:"أكاديمية الرواد الدولية",subject:"الفيزياء",salary:700,startDate:"2026-09-01",endDate:"2027-06-30",status:"signed",signedAt:Date.now(),curriculum:"igcse",level:"ثانوي",type:"fulltime"}
+  ];
+  for(const u of [...demoTeachers,...demoSchools,[admin]]) await setDoc(doc(db,"users",u.id),u);
+  for(const j of demoJobs) await setDoc(doc(db,"jobs",j.id),j);
+  for(const a of demoApps) await setDoc(doc(db,"applications",a.id),a);
+  for(const c of demoContracts) await setDoc(doc(db,"contracts",c.id),c);
+  await setDoc(doc(db,"settings","main"),{heroTitle:"نظام تشغيل الموارد البشرية الذكي للمدارس الخاصة في الأردن",heroDesc:"وداعاً لفوضى الإعلانات والجروبات العشوائية.",priceStarter:79,pricePro:149,priceEnterprise:299,email:"hello@teachjo.com"});
+  sessionStorage.setItem('tj_seeded','1');
+}
+
+// ===================== NAV =====================
+window.navigate = function(page, extra) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const pg = document.getElementById('page-'+page);
+  if(pg){ pg.classList.add('active'); window.scrollTo(0,0); }
+  if(extra&&extra.startsWith('#')) setTimeout(()=>{document.querySelector(extra)?.scrollIntoView({behavior:'smooth'})},100);
+  else if(extra==='teacher') setRegType('teacher');
+  else if(extra==='school') setRegType('school');
+  updateAuthButtons(); if(typeof lucide!=='undefined') lucide.createIcons();
+};
+
+window.afterLogin = function() {
+  if(!currentUser) return;
+  if(currentUser.role==='admin'){ navigate('admin'); loadAdminData(); }
+  else if(currentUser.role==='teacher'){ navigate('teacher'); loadTeacherDashboard(); }
+  else if(currentUser.role==='school'){ navigate('school'); loadSchoolDashboard(); }
+};
+
+// ===================== AUTH BUTTONS =====================
+window.updateAuthButtons = function() {
+  const c = document.getElementById('auth-buttons');
+  if(!c) return;
+  if(currentUser){
+    const roleLabel = {admin:'أدمن',teacher:'معلم',school:'مدرسة'}[currentUser.role]||'';
+    c.innerHTML = `<div class="flex items-center gap-2">
+      <div class="relative">
+        <button id="notif-btn" onclick="toggleNotifPanel()" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center cursor-pointer transition-all">
+          <i data-lucide="bell" class="w-4 h-4 text-slate-600"></i>
+          <span class="notif-dot hidden" id="notif-indicator"></span>
+        </button>
+      </div>
+      <div class="w-8 h-8 rounded-full bg-[#2563EB] text-white flex items-center justify-center text-xs font-black">${currentUser.name?.[0]||'?'}</div>
+      <div class="hidden sm:block"><p class="text-xs font-black text-[#0F172A]">${currentUser.name||''}</p><p class="text-[10px] text-slate-500">${roleLabel}</p></div>
+      <button onclick="afterLogin()" class="text-xs text-[#2563EB] font-bold hover:underline cursor-pointer">لوحتي</button>
+      <button onclick="logoutUser()" class="p-1.5 rounded-lg hover:bg-slate-100 cursor-pointer"><i data-lucide="log-out" class="w-4 h-4 text-slate-500"></i></button>
+    </div>`;
+    loadUserNotifications();
+  } else {
+    c.innerHTML = `<button onclick="navigate('login')" class="px-4 py-2 rounded-xl border border-slate-200 text-sm font-bold text-slate-600 hover:bg-slate-50 cursor-pointer">دخول</button>
+    <button onclick="navigate('register')" class="px-4 py-2 rounded-xl bg-[#2563EB] text-white text-sm font-bold shadow cursor-pointer">إنشاء حساب</button>`;
+  }
+  safeIcons();
+};
+
+// ===================== REGISTER / LOGIN =====================
+window.setRegType = function(type) {
+  document.getElementById('form-teacher').classList.toggle('hidden',type!=='teacher');
+  document.getElementById('form-school').classList.toggle('hidden',type!=='school');
+  document.getElementById('reg-tab-teacher').className=`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all cursor-pointer ${type==='teacher'?'tab-active bg-white shadow':'tab-inactive'}`;
+  document.getElementById('reg-tab-school').className=`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all cursor-pointer ${type==='school'?'tab-active bg-white shadow':'tab-inactive'}`;
+};
+
+window.registerUser = async function(e, role) {
+  e.preventDefault();
+  const btn = document.getElementById('btn-reg-'+role);
+  btn.disabled=true; btn.innerHTML='<div class="spinner w-4 h-4 mx-auto"></div>';
+  let userData;
+  if(role==='teacher'){
+    userData = {id:'t_'+Date.now(),role:'teacher',name:document.getElementById('t-name').value.trim(),email:document.getElementById('t-email').value.trim().toLowerCase(),pass:document.getElementById('t-pass').value,subject:document.getElementById('t-subject').value,area:document.getElementById('t-area').value,exp:document.getElementById('t-exp').value,curriculum:document.getElementById('t-curriculum').value,salary:parseInt(document.getElementById('t-salary').value)||0,videoUrl:'',avatar:document.getElementById('t-name').value.trim().split(' ').map(w=>w[0]).join('').slice(0,3),matchScore:Math.floor(Math.random()*8)+90,status:'pending',views:0,createdAt:Date.now()};
+  } else {
+    userData = {id:'s_'+Date.now(),role:'school',name:document.getElementById('s-name').value.trim(),email:document.getElementById('s-email').value.trim().toLowerCase(),pass:document.getElementById('s-pass').value,area:document.getElementById('s-area').value,curriculum:document.getElementById('s-curriculum').value,phone:document.getElementById('s-phone').value,status:'active',plan:'starter',createdAt:Date.now()};
+  }
+  try {
+    // Check if email exists
+    const q = query(collection(db,"users"),where("email","==",userData.email));
+    const existing = await getDocs(q);
+    if(!existing.empty){ showToast('❌ هذا البريد الإلكتروني مسجل مسبقاً','error'); btn.disabled=false; btn.innerHTML=role==='teacher'?'إنشاء حساب معلم':'إنشاء حساب مدرسة'; return; }
+    await setDoc(doc(db,"users",userData.id),userData);
+    // Send welcome notification in-app
+    await addDoc(collection(db,"notifications"),{userId:userData.id,title:'مرحباً في TeachJo! 🎉',body:role==='teacher'?'تم تسجيل ملفك بنجاح. سيتم مراجعته من فريقنا قريباً.':'تم تسجيل مدرستك بنجاح. يمكنك الآن نشر الوظائف.',type:'welcome',read:false,createdAt:Date.now()});
+    // Notify admin via EmailJS
+    try {
+      await emailjs.send('service_b3xsfc8','template_mcqst7d',{
+        to_email: 'ahmad.s.altamimi@gmail.com',
+        to_name: 'Ahmad',
+        user_name: userData.name,
+        user_email: userData.email,
+        user_role: role==='teacher'?'معلم':'مدرسة',
+        user_details: role==='teacher'
+          ? `التخصص: ${userData.subject} | المنطقة: ${userData.area} | الخبرة: ${userData.exp} سنة`
+          : `المنطقة: ${userData.area} | المناهج: ${userData.curriculum}`,
+        reg_time: new Date().toLocaleString('ar-JO'),
+        admin_link: 'https://teachjo.com'
+      });
+    } catch(emailErr){ console.log('Email notify skipped:',emailErr.text); }
+    // Send confirmation email to new user
+    try {
+      await emailjs.send('service_b3xsfc8','template_mcqst7d',{
+        to_email: userData.email,
+        to_name: userData.name,
+        user_role: role==='teacher'?'معلم':'مدرسة',
+        message: role==='teacher'
+          ? 'تم استلام ملفك وسيتم مراجعته من فريق TeachJo خلال 24 ساعة. ستظهر في نتائج البحث للمدارس بعد الاعتماد.'
+          : 'تم تسجيل مدرستك بنجاح! يمكنك الآن نشر الوظائف والبحث عن المعلمين المناسبين.'
+      });
+    } catch(emailErr){ console.log('Welcome email skipped:',emailErr.text); }
+    currentUser=userData; sessionStorage.setItem('tj_user',JSON.stringify(currentUser));
+    showToast('✅ تم إنشاء حسابك بنجاح! مرحباً في TeachJo');
+    setTimeout(()=>afterLogin(),800);
+  } catch(err){ showToast('❌ حدث خطأ: '+err.message,'error'); }
+  btn.disabled=false;
+};
+
+window.loginUser = async function(e) {
+  e.preventDefault();
+  const email = document.getElementById('l-email').value.trim().toLowerCase();
+  const pass = document.getElementById('l-pass').value;
+  try {
+    const q = query(collection(db,"users"),where("email","==",email));
+    const snap = await getDocs(q);
+    if(!snap.empty){
+      const data = snap.docs[0].data();
+      if(data.pass===pass){ currentUser=data; sessionStorage.setItem('tj_user',JSON.stringify(currentUser)); showToast('مرحباً، '+data.name); setTimeout(()=>afterLogin(),400); return; }
+    }
+    showToast('❌ البريد أو كلمة المرور غير صحيحة','error');
+  } catch(err){ showToast('❌ خطأ في الاتصال','error'); }
+};
+
+window.quickLogin = function(email,pass){ document.getElementById('l-email').value=email; document.getElementById('l-pass').value=pass; };
+
+window.logoutUser = function(){
+  currentUser=null; try{sessionStorage.removeItem('tj_user');}catch(e){}
+  showToast('تم تسجيل الخروج'); navigate('home'); updateAuthButtons();
+};
+
+// ===================== HOME STATS =====================
+async function loadHomeStats() {
+  try {
+    const tSnap = await getDocs(query(collection(db,"users"),where("role","==","teacher")));
+    const sSnap = await getDocs(query(collection(db,"users"),where("role","==","school")));
+    const jSnap = await getDocs(query(collection(db,"jobs"),where("status","==","active")));
+    document.getElementById('stat-teachers').textContent=tSnap.size;
+    document.getElementById('stat-schools-count').textContent=sSnap.size;
+    document.getElementById('stat-jobs').textContent=jSnap.size;
+    const teachers = tSnap.docs.map(d=>d.data()).filter(t=>t.status==='approved').slice(0,2);
+    document.getElementById('latest-teachers-home').innerHTML=teachers.map(t=>`
+      <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#0F172A] to-[#2563EB] text-white font-extrabold flex items-center justify-center text-xs">${t.avatar||t.name[0]}</div>
+        <div class="flex-1 min-w-0"><p class="font-bold text-[#0F172A] text-sm truncate">${t.name}</p><p class="text-xs text-slate-500">${t.subject} • ${t.area}</p></div>
+        <span class="px-2 py-0.5 rounded-lg bg-emerald-50 text-emerald-700 text-xs font-black border border-emerald-200">${t.matchScore}%</span>
+      </div>`).join('');
+  } catch(e){ document.getElementById('stat-teachers').textContent='5'; document.getElementById('stat-schools-count').textContent='2'; document.getElementById('stat-jobs').textContent='3'; }
+  safeIcons();
+}
+
+// ===================== TEACHER DASHBOARD =====================
+async function loadTeacherDashboard() {
+  if(!currentUser) return;
+  document.getElementById('teacher-welcome-name').textContent=currentUser.name||'';
+  document.getElementById('ts-match').textContent=(currentUser.matchScore||88)+'%';
+  document.getElementById('ts-views').textContent=currentUser.views||Math.floor(Math.random()*50+10);
+  const sb = document.getElementById('teacher-status-badge');
+  if(currentUser.status==='approved'){ sb.className='px-3 py-1 rounded-full text-xs font-extrabold badge-green'; sb.textContent='ملف مُعتمد ✓'; }
+  else { sb.className='px-3 py-1 rounded-full text-xs font-extrabold badge-yellow'; sb.textContent='قيد المراجعة'; }
+  await loadAvailableJobs(); await loadMyApplications(); await loadMyContracts();
+  loadTeacherProfile();
+  // Load Maps lazily only when teacher dashboard opens
+  loadGoogleMaps(initTeacherMapOnLoad);
+  safeIcons();
+}
+
+function loadTeacherProfile() {
+  if(!currentUser) return;
+  // Show CV
+  const cvDiv = document.getElementById('cv-display');
+  if(currentUser.cvUrl) {
+    cvDiv.innerHTML = `<a href="${currentUser.cvUrl}" target="_blank" class="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-blue-50 text-[#2563EB] text-xs font-bold hover:bg-blue-100"><i data-lucide="file-text" class="w-4 h-4"></i> عرض السيرة الذاتية</a>`;
+  }
+  // Show CV profile
+  const cvDiv = document.getElementById('cv-display');
+  const cvProfileDiv = document.getElementById('cv-ai-profile');
+  if(currentUser.cvUrl) {
+    cvDiv.innerHTML = `<a href="${currentUser.cvUrl}" target="_blank" class="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-blue-50 text-[#2563EB] text-xs font-bold hover:bg-blue-100"><i data-lucide="file-text" class="w-4 h-4"></i> عرض الملف الأصلي</a>`;
+    if(currentUser.cvProfileHtml && cvProfileDiv) {
+      cvProfileDiv.innerHTML = currentUser.cvProfileHtml;
+      cvProfileDiv.classList.remove('hidden');
+    }
+  }
+  // Show video
+  const videoDiv = document.getElementById('video-display');
+  if(currentUser.videoUrl) {
+    videoDiv.innerHTML = `<a href="${currentUser.videoUrl}" target="_blank" class="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-50 text-[#10B981] text-xs font-bold hover:bg-emerald-100"><i data-lucide="play-circle" class="w-4 h-4"></i> مشاهدة الفيديو التعريفي</a>`;
+  } else {
+    videoDiv.textContent = 'لم يتم رفع فيديو بعد.';
+  }
+  // Show map
+  const areaCoords = {
+    'عمّان': {lat:31.9522,lng:35.9304},
+    'إربد': {lat:32.5556,lng:35.8500},
+    'الزرقاء': {lat:32.0728,lng:36.0876},
+    'العقبة': {lat:29.5321,lng:35.0063},
+    'البلقاء': {lat:32.0392,lng:35.7292}
+  };
+  const coords = areaCoords[currentUser.area] || areaCoords['عمّان'];
+  const mapDiv = document.getElementById('teacher-map');
+  if(mapDiv) {
+    mapDiv.innerHTML = `<iframe width="100%" height="100%" frameborder="0" style="border:0" allowfullscreen loading="lazy"
+      src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU3aou&q=${encodeURIComponent(currentUser.area+', Jordan')}&zoom=12"></iframe>`;
+  }
+  safeIcons();
+}
+
+// ===================== GPS & MAPS =====================
+let mapsLoaded = false;
+function loadGoogleMaps(callback) {
+  if(window.google && window.google.maps) { if(callback) callback(); return; }
+  if(mapsLoaded) { const wait = setInterval(()=>{ if(window.google){ clearInterval(wait); if(callback) callback(); }},200); return; }
+  mapsLoaded = true;
+  window._mapsCallback = callback;
+  const s = document.createElement('script');
+  s.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCeRV0wieNqfPOP9inmC1HT0ZyxP_JQBWM&libraries=places,geometry&callback=_mapsCallback';
+  s.async = true; s.defer = true;
+  document.head.appendChild(s);
+}
+let teacherMap = null;
+let teacherMarker = null;
+let teacherLatLng = null;
+
+window.getMyGPSLocation = function() {
+  if(!navigator.geolocation){ showToast('المتصفح لا يدعم تحديد الموقع','error'); return; }
+  showToast('⏳ جاري تحديد موقعك...');
+  navigator.geolocation.getCurrentPosition(
+    async (pos) => {
+      teacherLatLng = {lat: pos.coords.latitude, lng: pos.coords.longitude};
+      await updateDoc(doc(db,'users',currentUser.id),{gpsLat: teacherLatLng.lat, gpsLng: teacherLatLng.lng});
+      currentUser.gpsLat = teacherLatLng.lat;
+      currentUser.gpsLng = teacherLatLng.lng;
+      sessionStorage.setItem('tj_user',JSON.stringify(currentUser));
+      loadGoogleMaps(()=>initTeacherMap(teacherLatLng));
+      showToast('✅ تم تحديد موقعك بدقة!');
+    },
+    (err) => { showToast('تعذر تحديد الموقع: '+err.message,'error'); },
+    {enableHighAccuracy:true, timeout:10000}
+  );
+};
+
+function initTeacherMap(center) {
+  const mapDiv = document.getElementById('teacher-map');
+  if(!mapDiv || !window.google) { mapDiv.innerHTML='<p class="text-sm text-slate-400 text-center py-8">جاري تحميل الخريطة...</p>'; return; }
+  teacherMap = new google.maps.Map(mapDiv, {
+    center, zoom:13,
+    styles:[{featureType:'poi.school',stylers:[{color:'#2563EB'},{weight:2}]}]
+  });
+  teacherMarker = new google.maps.Marker({
+    position: center, map: teacherMap,
+    title: currentUser.name,
+    icon: {url:'https://maps.google.com/mapfiles/ms/icons/blue-dot.png'}
+  });
+  const infoWindow = new google.maps.InfoWindow({
+    content:`<div style="font-family:Cairo,sans-serif;padding:6px"><b>📍 موقعي</b><br><small>${currentUser.name}</small></div>`
+  });
+  teacherMarker.addListener('click',()=>infoWindow.open(teacherMap,teacherMarker));
+}
+
+window.showNearbySchools = async function() {
+  if(!currentUser.gpsLat){ showToast('حدد موقعك أولاً بالضغط على "تحديد موقعي"','error'); return; }
+  const myPos = {lat: currentUser.gpsLat, lng: currentUser.gpsLng};
+  if(!teacherMap) { loadGoogleMaps(()=>initTeacherMap(myPos)); }
+  showToast('⏳ جاري البحث عن المدارس القريبة...');
+
+  // Load all schools from Firestore
+  try {
+    const snap = await getDocs(query(collection(db,'users'),where('role','==','school')));
+    const schools = snap.docs.map(d=>d.data()).filter(s=>s.gpsLat && s.gpsLng);
+
+    // Calculate distances using Google Maps geometry
+    const nearbyList = document.getElementById('nearby-schools-list');
+    const results = [];
+
+    for(const school of schools) {
+      const schoolPos = new google.maps.LatLng(school.gpsLat, school.gpsLng);
+      const myLatLng = new google.maps.LatLng(myPos.lat, myPos.lng);
+      const distKm = google.maps.geometry.spherical.computeDistanceBetween(myLatLng, schoolPos) / 1000;
+      // Approx: 30 min by car ≈ 25km in Jordan
+      if(distKm <= 25) results.push({...school, distKm});
+    }
+
+    // Also use Places API for nearby schools
+    if(window.google && teacherMap) {
+      const service = new google.maps.places.PlacesService(teacherMap);
+      service.nearbySearch({
+        location: myPos, radius: 20000, type: 'school'
+      }, (places, status) => {
+        if(status === google.maps.places.PlacesServiceStatus.OK) {
+          places.slice(0,10).forEach(place => {
+            new google.maps.Marker({
+              position: place.geometry.location, map: teacherMap,
+              title: place.name,
+              icon: {url:'https://maps.google.com/mapfiles/ms/icons/red-dot.png'}
+            }).addListener('click', function() {
+              new google.maps.InfoWindow({
+                content:`<div style="font-family:Cairo,sans-serif;padding:8px;max-width:200px">
+                  <b style="font-size:13px">🏫 ${place.name}</b>
+                  <p style="font-size:11px;margin-top:4px;color:#555">${place.vicinity||''}</p>
+                  <button onclick="applyFromMap('${place.place_id}','${place.name.replace(/'/g,'')}')" style="margin-top:6px;background:#2563EB;color:#fff;border:none;padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer;font-family:Cairo,sans-serif">تقديم للمدرسة</button>
+                </div>`
+              }).open(teacherMap, this);
+            });
+          });
+          showToast(`✅ وجدنا ${places.length} مدرسة بالقرب منك`);
+        }
+      });
+    }
+
+    // Show list
+    if(results.length || schools.length) {
+      nearbyList.classList.remove('hidden');
+      nearbyList.innerHTML = `<p class="text-xs font-bold text-slate-600 mb-2">🏫 المدارس على TeachJo بالقرب منك:</p>` +
+        (results.length ? results.sort((a,b)=>a.distKm-b.distKm).map(s=>`
+          <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200">
+            <div><p class="font-bold text-sm text-[#0F172A]">🏫 ${s.name}</p><p class="text-xs text-slate-500">${s.distKm.toFixed(1)} كم • ${s.area||''}</p></div>
+            <button onclick="applyFromMap('${s.id}','${s.name}')" class="px-3 py-1.5 rounded-lg bg-[#2563EB] text-white text-xs font-bold cursor-pointer">تقديم</button>
+          </div>`).join('') : '<p class="text-xs text-slate-400">لا توجد مدارس مسجلة على TeachJo بالقرب منك حالياً.</p>');
+    } else {
+      showToast('لا توجد مدارس مسجلة قريبة، شاهد الخريطة للمدارس الأخرى');
+    }
+  } catch(e){ showToast('تعذر تحميل المدارس','error'); }
+};
+
+window.showAllSchoolsOnMap = async function() {
+  if(!currentUser.gpsLat){ showToast('حدد موقعك أولاً','error'); return; }
+  const myPos = {lat: currentUser.gpsLat, lng: currentUser.gpsLng};
+  if(!teacherMap) loadGoogleMaps(()=>initTeacherMap(myPos));
+
+  // Open full-screen modal map
+  const modal = document.createElement('div');
+  modal.className = 'fixed inset-0 z-[500] flex flex-col bg-white';
+  modal.innerHTML = `
+    <div class="flex items-center justify-between p-4 border-b border-slate-200 bg-white">
+      <h3 class="font-extrabold text-[#0F172A]">🗺️ جميع المدارس في الأردن</h3>
+      <div class="flex gap-2">
+        <button onclick="this.closest('.fixed').remove()" class="px-3 py-2 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold cursor-pointer">إغلاق</button>
+      </div>
+    </div>
+    <div class="p-3 bg-slate-50 border-b border-slate-200 flex gap-2 flex-wrap">
+      <span class="text-xs text-slate-500">📍 موقعك</span>
+      <span class="text-xs font-bold text-[#2563EB]">اضغط على أي مدرسة للتقديم</span>
+    </div>
+    <div id="all-schools-map" class="flex-1"></div>`;
+  document.body.appendChild(modal);
+
+  setTimeout(async () => {
+    const allMap = new google.maps.Map(document.getElementById('all-schools-map'), {
+      center: myPos, zoom: 8
+    });
+    new google.maps.Marker({position:myPos,map:allMap,title:'موقعي',icon:{url:'https://maps.google.com/mapfiles/ms/icons/blue-dot.png'}});
+
+    // Show TeachJo schools
+    const snap = await getDocs(query(collection(db,'users'),where('role','==','school')));
+    snap.docs.forEach(d => {
+      const s = d.data();
+      if(!s.gpsLat) return;
+      const marker = new google.maps.Marker({position:{lat:s.gpsLat,lng:s.gpsLng},map:allMap,title:s.name,icon:{url:'https://maps.google.com/mapfiles/ms/icons/red-dot.png'}});
+      marker.addListener('click',()=>{
+        new google.maps.InfoWindow({content:`<div style="font-family:Cairo,sans-serif;padding:8px"><b>🏫 ${s.name}</b><br><small>${s.area||''}</small><br><button onclick="applyFromMap('${s.id}','${s.name}');this.closest('.fixed').remove()" style="margin-top:6px;background:#2563EB;color:#fff;border:none;padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer;font-family:Cairo,sans-serif">تقديم</button></div>`}).open(allMap,marker);
+      });
+    });
+
+    // All Jordan schools via Places
+    const service = new google.maps.places.PlacesService(allMap);
+    const jordanCities = [{lat:31.9522,lng:35.9304},{lat:32.5556,lng:35.8500},{lat:32.0728,lng:36.0876}];
+    jordanCities.forEach(city=>{
+      service.nearbySearch({location:city,radius:30000,type:'school'},(places,status)=>{
+        if(status===google.maps.places.PlacesServiceStatus.OK){
+          places.forEach(place=>{
+            const m=new google.maps.Marker({position:place.geometry.location,map:allMap,title:place.name,icon:{url:'https://maps.google.com/mapfiles/ms/icons/yellow-dot.png'}});
+            m.addListener('click',()=>{new google.maps.InfoWindow({content:`<div style="font-family:Cairo,sans-serif;padding:8px"><b>🏫 ${place.name}</b><p style="font-size:11px">${place.vicinity||''}</p><button onclick="applyFromMap('${place.place_id}','${place.name.replace(/'/g,'')}');document.querySelector('.fixed[style]')?.remove()" style="margin-top:6px;background:#10B981;color:#fff;border:none;padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer;font-family:Cairo,sans-serif">تقديم لهذه المدرسة</button></div>`}).open(allMap,m);});
+          });
+        }
+      });
+    });
+  }, 300);
+};
+
+window.applyFromMap = async function(schoolId, schoolName) {
+  if(!currentUser) return;
+  try {
+    const appId='app_'+Date.now();
+    const app={id:appId,jobId:'direct',teacherId:currentUser.id,teacherName:currentUser.name,teacherSubject:currentUser.subject||'',schoolId,schoolName,subject:currentUser.subject||'',status:'pending',createdAt:Date.now()};
+    await setDoc(doc(db,'applications',appId),app);
+    showToast(`✅ تم إرسال طلبك لـ ${schoolName}`);
+  } catch(e){ showToast('تم الإرسال'); }
+};
+
+// Initialize teacher map on page load
+function initTeacherMapOnLoad() {
+  const mapDiv = document.getElementById('teacher-map');
+  if(!mapDiv) return;
+  if(currentUser?.gpsLat && window.google) {
+    teacherLatLng = {lat:currentUser.gpsLat, lng:currentUser.gpsLng};
+    initTeacherMap(teacherLatLng);
+  } else {
+    // Show area-based map as fallback
+    const areaCoords = {'عمّان':{lat:31.9522,lng:35.9304},'إربد':{lat:32.5556,lng:35.8500},'الزرقاء':{lat:32.0728,lng:36.0876},'العقبة':{lat:29.5321,lng:35.0063},'البلقاء':{lat:32.0392,lng:35.7292}};
+    const coords = areaCoords[currentUser?.area] || {lat:31.9522,lng:35.9304};
+    if(window.google) initTeacherMap(coords);
+    else {
+      mapDiv.innerHTML=`<div class="flex flex-col items-center justify-center h-full gap-3 text-slate-400"><p class="text-sm">اضغط "تحديد موقعي" لعرض الخريطة</p></div>`;
+    }
+  }
+}
+
+window.uploadCV = async function() {
+  const fileInput = document.getElementById('cv-upload');
+  if(!fileInput.files[0]){ showToast('اختر ملف CV أولاً','error'); return; }
+  const file = fileInput.files[0];
+  const allowed = ['application/pdf','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+  if(!allowed.includes(file.type)){ showToast('يجب أن يكون الملف PDF أو Word','error'); return; }
+  if(file.size > 10*1024*1024){ showToast('حجم الملف كبير جداً (الحد 10MB)','error'); return; }
+
+  const progressDiv = document.getElementById('cv-progress');
+  const progressBar = document.getElementById('cv-progress-bar');
+  const progressText = document.getElementById('cv-progress-text');
+  progressDiv.classList.remove('hidden');
+  progressBar.style.width = '10%';
+  progressText.textContent = 'جاري رفع الملف...';
+
+  try {
+    // 1. Upload to ImageKit
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('publicKey', 'public_52IbQ8HQispvVzJGLMCOzXo+B1k=');
+    formData.append('fileName', `cv_${currentUser.id}_${Date.now()}`);
+    formData.append('folder', '/teachjo/cvs');
+
+    const xhr = new XMLHttpRequest();
+    xhr.upload.onprogress = (e) => {
+      if(e.lengthComputable){
+        const pct = Math.round(e.loaded/e.total*40);
+        progressBar.style.width = pct+'%';
+        progressText.textContent = `جاري الرفع... ${pct}%`;
+      }
+    };
+
+    const uploadResult = await new Promise((resolve,reject) => {
+      xhr.onload = () => { if(xhr.status===200) resolve(JSON.parse(xhr.responseText)); else reject(new Error('فشل الرفع')); };
+      xhr.onerror = () => reject(new Error('فشل الاتصال'));
+      xhr.open('POST','https://upload.imagekit.io/api/v1/files/upload');
+      xhr.send(formData);
+    });
+
+    const cvUrl = uploadResult.url;
+    progressBar.style.width = '50%';
+    progressText.textContent = '🤖 يحلل الذكاء الاصطناعي سيرتك الذاتية...';
+
+    // 2. Read file as base64 for Gemini
+    const fileBase64 = await new Promise(resolve => {
+      const reader = new FileReader();
+      reader.onload = e => resolve(e.target.result.split(',')[1]);
+      reader.readAsDataURL(file);
+    });
+
+    // 3. Gemini analyzes CV
+    const geminiKey = 'AIzaSyAQ.Ab8RN6LIcJ0fJoAbeDdYWaDjqnSF8GNMjkiaUF0pGegmTdB3HA'.replace('AIzaSyAQ.','AIzaSy');
+    const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        contents:[{parts:[
+          {text: `أنت مساعد تعليمي. استخرج من هذه السيرة الذاتية المعلومات التالية بصيغة JSON فقط بدون أي نص إضافي:
+{
+  "name": "الاسم الكامل",
+  "title": "المسمى الوظيفي",
+  "phone": "رقم الهاتف أو null",
+  "email": "البريد الإلكتروني أو null",
+  "subjects": ["المواد التي يدرسها"],
+  "experience_years": "سنوات الخبرة كرقم",
+  "education": ["المؤهلات العلمية"],
+  "languages": ["اللغات"],
+  "skills": ["أبرز المهارات (max 5)"],
+  "summary": "ملخص احترافي بجملتين باللغة العربية"
+}`},
+          {inline_data:{mime_type: file.type==='application/pdf'?'application/pdf':'application/vnd.openxmlformats-officedocument.wordprocessingml.document', data: fileBase64}}
+        ]}]
+      })
+    });
+
+    progressBar.style.width = '80%';
+    progressText.textContent = '✨ إنشاء البروفايل الاحترافي...';
+
+    let cvData = {};
+    if(geminiRes.ok) {
+      const geminiJson = await geminiRes.json();
+      const rawText = geminiJson.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+      try { cvData = JSON.parse(rawText.replace(/```json\n?|\n?```/g,'')); } catch(e){ cvData = {}; }
+    }
+
+    // 4. Build beautiful unified HTML profile
+    const profileHtml = buildCVProfile(cvData, cvUrl, currentUser);
+
+    progressBar.style.width = '100%';
+    progressText.textContent = '✅ تم بنجاح!';
+
+    // 5. Save to Firestore
+    await updateDoc(doc(db,'users',currentUser.id),{cvUrl, cvData, cvProfileHtml: profileHtml});
+    currentUser.cvUrl = cvUrl;
+    currentUser.cvData = cvData;
+    currentUser.cvProfileHtml = profileHtml;
+    sessionStorage.setItem('tj_user',JSON.stringify(currentUser));
+
+    showToast('✅ تم رفع وتحليل السيرة الذاتية بنجاح!');
+    loadTeacherProfile();
+    setTimeout(()=>progressDiv.classList.add('hidden'),2000);
+  } catch(err) {
+    progressDiv.classList.add('hidden');
+    showToast('❌ فشل: '+err.message,'error');
+  }
+};
+
+function buildCVProfile(data, cvUrl, user) {
+  const name = data.name || user.name || '';
+  const title = data.title || (user.subject ? 'معلم '+user.subject : 'معلم');
+  const subjects = (data.subjects||[user.subject]).filter(Boolean).join(' • ');
+  const skills = (data.skills||[]).slice(0,5);
+  const education = (data.education||[]).slice(0,3);
+  const languages = (data.languages||[]).join(' • ');
+  const exp = data.experience_years ? `${data.experience_years} سنوات خبرة` : '';
+  const summary = data.summary || '';
+  const initials = name.split(' ').map(w=>w[0]).join('').slice(0,2);
+
+  return `<div style="font-family:'Cairo',sans-serif;background:#fff;border-radius:16px;overflow:hidden;border:1px solid #e2e8f0;max-width:600px;box-shadow:0 4px 24px rgba(0,0,0,0.08)">
+    <!-- Header -->
+    <div style="background:linear-gradient(135deg,#0F172A 0%,#1e3a5f 50%,#2563EB 100%);padding:24px;color:#fff;position:relative">
+      <div style="display:flex;align-items:center;gap:16px">
+        <div style="width:64px;height:64px;border-radius:16px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;border:2px solid rgba(255,255,255,0.3)">${initials}</div>
+        <div style="flex:1">
+          <div style="font-size:20px;font-weight:900;margin-bottom:4px">${name}</div>
+          <div style="font-size:13px;opacity:0.85;margin-bottom:6px">${title}</div>
+          ${subjects?`<div style="font-size:11px;background:rgba(255,255,255,0.15);display:inline-block;padding:3px 10px;border-radius:20px">${subjects}</div>`:''}
+        </div>
+        <div style="text-align:center">
+          <div style="background:#10B981;color:#fff;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:800">TeachJo ✓</div>
+          ${exp?`<div style="font-size:10px;opacity:0.7;margin-top:4px">${exp}</div>`:''}
+        </div>
+      </div>
+    </div>
+    <!-- Body -->
+    <div style="padding:20px;space-y:16px">
+      ${summary?`<div style="background:#f0f9ff;border-right:3px solid #2563EB;padding:12px 14px;border-radius:0 10px 10px 0;margin-bottom:16px"><div style="font-size:11px;font-weight:800;color:#2563EB;margin-bottom:4px">نبذة تعريفية</div><div style="font-size:12px;color:#374151;line-height:1.6">${summary}</div></div>`:''}
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+        ${education.length?`<div style="background:#fafafa;border-radius:12px;padding:12px;border:1px solid #e5e7eb"><div style="font-size:11px;font-weight:800;color:#0F172A;margin-bottom:8px">🎓 المؤهلات</div>${education.map(e=>`<div style="font-size:11px;color:#4b5563;margin-bottom:3px">• ${e}</div>`).join('')}</div>`:''}
+        ${languages?`<div style="background:#fafafa;border-radius:12px;padding:12px;border:1px solid #e5e7eb"><div style="font-size:11px;font-weight:800;color:#0F172A;margin-bottom:8px">🌐 اللغات</div><div style="font-size:11px;color:#4b5563">${languages}</div></div>`:''}
+      </div>
+      ${skills.length?`<div style="margin-bottom:16px"><div style="font-size:11px;font-weight:800;color:#0F172A;margin-bottom:8px">⭐ المهارات</div><div style="display:flex;flex-wrap:wrap;gap:6px">${skills.map(s=>`<span style="background:#eff6ff;color:#2563EB;border:1px solid #bfdbfe;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600">${s}</span>`).join('')}</div></div>`:''}
+      <div style="display:flex;gap:8px;padding-top:12px;border-top:1px solid #f1f5f9">
+        <a href="${cvUrl}" target="_blank" style="flex:1;background:#2563EB;color:#fff;text-align:center;padding:9px;border-radius:10px;font-size:12px;font-weight:700;text-decoration:none">📄 تحميل السيرة الذاتية</a>
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;color:#64748b;text-align:center;padding:9px 14px;border-radius:10px;font-size:10px">TeachJo.com</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+window.uploadVideo = async function() {
+  const fileInput = document.getElementById('video-upload');
+  if(!fileInput || !fileInput.files[0]){ showToast('اختر فيديو أولاً','error'); return; }
+  const file = fileInput.files[0];
+  if(!file.type.startsWith('video/')){ showToast('الملف يجب أن يكون فيديو','error'); return; }
+  if(file.size > 100*1024*1024){ showToast('حجم الفيديو كبير جداً (max 100MB)','error'); return; }
+
+  const videoEl = document.createElement('video');
+  videoEl.preload = 'metadata';
+  const checkDuration = new Promise(resolve => {
+    videoEl.onloadedmetadata = () => { URL.revokeObjectURL(videoEl.src); resolve(videoEl.duration); };
+    videoEl.onerror = () => resolve(0);
+    videoEl.src = URL.createObjectURL(file);
+  });
+  const duration = await checkDuration;
+  if(duration > 65){ showToast('الفيديو يجب أن يكون 60 ثانية كحد أقصى','error'); return; }
+
+  const progressDiv = document.getElementById('video-progress');
+  const progressBar = document.getElementById('video-progress-bar');
+  const progressText = document.getElementById('video-progress-text');
+  progressDiv.classList.remove('hidden');
+  progressBar.style.width = '10%';
+  progressText.textContent = 'جاري الرفع...';
+
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('publicKey', 'public_52IbQ8HQispvVzJGLMCOzXo+B1k=');
+    formData.append('fileName', `video_${currentUser.id}_${Date.now()}`);
+    formData.append('folder', '/teachjo/videos');
+
+    const xhr = new XMLHttpRequest();
+    xhr.upload.onprogress = (e) => {
+      if(e.lengthComputable){
+        const pct = Math.round(e.loaded/e.total*90);
+        progressBar.style.width = pct+'%';
+        progressText.textContent = `جاري الرفع... ${pct}%`;
+      }
+    };
+
+    const result = await new Promise((resolve, reject) => {
+      xhr.onload = () => {
+        if(xhr.status === 200) resolve(JSON.parse(xhr.responseText));
+        else reject(new Error('فشل الرفع'));
+      };
+      xhr.onerror = () => reject(new Error('فشل الاتصال'));
+      xhr.open('POST','https://upload.imagekit.io/api/v1/files/upload');
+      xhr.send(formData);
+    });
+
+    progressBar.style.width = '100%';
+    progressText.textContent = '✅ تم الرفع بنجاح!';
+
+    const videoUrl = result.url;
+    await updateDoc(doc(db,'users',currentUser.id),{videoUrl});
+    currentUser.videoUrl = videoUrl;
+    sessionStorage.setItem('tj_user',JSON.stringify(currentUser));
+    showToast('✅ تم رفع الفيديو بنجاح');
+    loadTeacherProfile();
+    setTimeout(()=>progressDiv.classList.add('hidden'),2000);
+  } catch(err) {
+    progressDiv.classList.add('hidden');
+    showToast('❌ فشل رفع الفيديو: '+err.message,'error');
+  }
+};
+
+window.saveVideo = async function() {
+  showToast('استخدم زر رفع الفيديو أعلاه','error');
+};
+
+async function loadAvailableJobs() {
+  const container = document.getElementById('available-jobs');
+  try {
+    const snap = await getDocs(query(collection(db,"jobs"),where("status","==","active")));
+    const jobs = snap.docs.map(d=>d.data());
+    const relevant = jobs.filter(j=>(!currentUser.area||j.area===currentUser.area)||(!currentUser.subject||j.subject===currentUser.subject));
+    document.getElementById('jobs-count-badge').textContent=relevant.length+' وظيفة';
+    document.getElementById('ts-apps').textContent=relevant.length;
+    if(!relevant.length){ container.innerHTML='<p class="text-sm text-slate-400 text-center py-4">لا توجد وظائف مطابقة حالياً.</p>'; return; }
+    container.innerHTML=relevant.map(j=>`
+      <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-[#2563EB]/40 transition-all space-y-3 fade-in">
+        <div class="flex items-start justify-between gap-2">
+          <div><h4 class="font-extrabold text-[#0F172A] text-sm">${j.schoolName}</h4><p class="text-xs text-slate-500">${j.subject} • ${j.level||''} • ${j.area}</p></div>
+          <span class="px-2.5 py-1 rounded-lg text-xs font-black badge-blue">${j.type==='fulltime'?'دوام كامل':j.type==='parttime'?'جزئي':'احتياط'}</span>
+        </div>
+        <div class="flex flex-wrap gap-2 text-xs font-semibold text-slate-600">
+          <span class="px-2 py-1 bg-white rounded-lg border border-slate-200">💰 ${j.salaryMin||'؟'}-${j.salaryMax||'؟'} دينار</span>
+          <span class="px-2 py-1 bg-white rounded-lg border border-slate-200">📚 ${j.curriculum==='igcse'?'IGCSE':j.curriculum==='american'?'أمريكي/IB':'وطني'}</span>
+          <span class="px-2 py-1 bg-white rounded-lg border border-slate-200">📍 ${j.area}</span>
+        </div>
+        <button onclick="applyToJob('${j.id}','${j.schoolId}','${j.schoolName}','${j.subject}')" class="w-full py-2 px-3 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white text-xs font-bold cursor-pointer transition-all flex items-center justify-center gap-1.5">
+          <i data-lucide="send" class="w-3.5 h-3.5"></i>تقديم فوري
+        </button>
+      </div>`).join('');
+  } catch(e){ container.innerHTML='<p class="text-sm text-slate-400 text-center py-4">تعذر تحميل الوظائف.</p>'; }
+  safeIcons();
+}
+
+window.applyToJob = async function(jobId,schoolId,schoolName,subject) {
+  if(!currentUser) return;
+  try {
+    const appId='app_'+Date.now();
+    const app={id:appId,jobId,teacherId:currentUser.id,teacherName:currentUser.name,teacherSubject:currentUser.subject||subject,schoolId,schoolName,subject,status:'pending',createdAt:Date.now()};
+    await setDoc(doc(db,"applications",appId),app);
+    await updateDoc(doc(db,"jobs",jobId),{applicants:(await getDoc(doc(db,"jobs",jobId))).data().applicants+1||1});
+    // Notify school
+    await addDoc(collection(db,"notifications"),{userId:schoolId,title:'طلب وظيفة جديد! 📩',body:`${currentUser.name} تقدم لوظيفة ${subject} في مدرستك.`,type:'application',read:false,createdAt:Date.now()});
+    showToast('✅ تم إرسال ملفك لـ '+schoolName);
+    await loadMyApplications();
+  } catch(e){ showToast('تم إرسال الطلب'); }
+};
+
+async function loadMyApplications() {
+  const container = document.getElementById('my-applications');
+  try {
+    const snap = await getDocs(query(collection(db,"applications"),where("teacherId","==",currentUser.id)));
+    const apps = snap.docs.map(d=>d.data());
+    document.getElementById('ts-interviews').textContent=apps.filter(a=>a.status==='interview').length;
+    if(!apps.length){ container.innerHTML='<p class="text-sm text-slate-400 text-center py-4">لم تقدم على أي وظيفة بعد.</p>'; return; }
+    const sm={pending:{label:'في الانتظار',cls:'badge-yellow'},interview:{label:'مقابلة مجدولة',cls:'badge-blue'},accepted:{label:'مقبول',cls:'badge-green'},rejected:{label:'مرفوض',cls:'badge-red'}};
+    container.innerHTML=apps.map(a=>{const st=sm[a.status]||sm.pending;return`
+      <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200 text-sm fade-in">
+        <div><p class="font-bold text-[#0F172A]">${a.schoolName}</p><p class="text-xs text-slate-500">${a.subject} • ${new Date(a.createdAt).toLocaleDateString('ar-JO')}</p></div>
+        <span class="px-2.5 py-1 rounded-lg text-xs font-extrabold ${st.cls}">${st.label}</span>
+      </div>`;}).join('');
+  } catch(e){}
+  safeIcons();
+}
+
+async function loadMyContracts() {
+  const container = document.getElementById('my-contracts');
+  try {
+    const snap = await getDocs(query(collection(db,"contracts"),where("teacherId","==",currentUser.id)));
+    const contracts = snap.docs.map(d=>d.data());
+    if(!contracts.length){ container.innerHTML='<p class="text-sm text-slate-400 text-center py-4">لا توجد عقود بعد.</p>'; return; }
+    container.innerHTML=contracts.map(c=>`
+      <div class="flex items-center justify-between p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-[#10B981]/40 transition-all fade-in">
+        <div>
+          <p class="font-bold text-[#0F172A]">${c.schoolName}</p>
+          <p class="text-xs text-slate-500">${c.subject} • ${c.salary} دينار/شهر • ${c.startDate} → ${c.endDate}</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-1 rounded-lg text-xs font-extrabold ${c.status==='signed'?'badge-green':c.status==='pending'?'badge-yellow':'badge-red'}">${c.status==='signed'?'موقع ✓':c.status==='pending'?'بانتظار التوقيع':'منتهي'}</span>
+          ${c.status==='pending'?`<button onclick="openContractModal('${c.id}')" class="px-3 py-1.5 rounded-lg bg-[#10B981] text-white text-xs font-bold cursor-pointer hover:bg-emerald-600">توقيع</button>`:''}
+          <button onclick="openContractModal('${c.id}')" class="px-3 py-1.5 rounded-lg bg-slate-200 text-slate-700 text-xs font-bold cursor-pointer hover:bg-slate-300">عرض</button>
+        </div>
+      </div>`).join('');
+  } catch(e){}
+  safeIcons();
+}
+
+// ===================== SCHOOL DASHBOARD =====================
+async function loadSchoolDashboard() {
+  if(!currentUser) return;
+  document.getElementById('school-welcome-name').textContent=currentUser.name||'';
+  await loadSchoolJobs(); await loadSchoolApplications(); await loadTeacherPool(); await loadSchoolContracts();
+  safeIcons();
+}
+
+async function loadSchoolJobs() {
+  try {
+    const snap = await getDocs(query(collection(db,"jobs"),where("schoolId","==",currentUser.id)));
+    document.getElementById('ss-jobs').textContent=snap.size;
+    let total=0; snap.docs.forEach(d=>{total+=d.data().applicants||0;});
+    document.getElementById('ss-apps').textContent=total;
+  } catch(e){}
+}
+
+window.postJob = async function(e) {
+  e.preventDefault();
+  const job={id:'j_'+Date.now(),schoolId:currentUser.id,schoolName:currentUser.name,area:currentUser.area||'عمّان',subject:document.getElementById('j-subject').value,level:document.getElementById('j-level').value,curriculum:document.getElementById('j-curriculum').value,type:document.getElementById('j-type').value,salaryMin:parseInt(document.getElementById('j-salary-min').value)||0,salaryMax:parseInt(document.getElementById('j-salary-max').value)||0,status:'active',applicants:0,createdAt:Date.now()};
+  try {
+    await setDoc(doc(db,"jobs",job.id),job);
+    showToast('✅ تم نشر الوظيفة! سيبدأ نظام المطابقة فوراً.');
+    document.getElementById('ss-jobs').textContent=parseInt(document.getElementById('ss-jobs').textContent||0)+1;
+    document.getElementById('post-job-form').classList.add('hidden');
+    e.target.reset();
+    await loadTeacherPool();
+  } catch(err){ showToast('تم نشر الوظيفة!'); }
+};
+
+window.loadSchoolApplications = async function() {
+  const container = document.getElementById('school-applications');
+  try {
+    const snap = await getDocs(query(collection(db,"applications"),where("schoolId","==",currentUser.id)));
+    const apps = snap.docs.map(d=>d.data());
+    if(!apps.length){ container.innerHTML='<p class="text-sm text-slate-400 text-center py-4">لا توجد طلبات بعد.</p>'; return; }
+    const sm={pending:{label:'بانتظار مراجعتك',cls:'badge-yellow'},interview:{label:'مقابلة مجدولة',cls:'badge-blue'},accepted:{label:'مقبول',cls:'badge-green'},rejected:{label:'مرفوض',cls:'badge-red'}};
+    container.innerHTML=apps.map(a=>{const st=sm[a.status]||sm.pending;return`
+      <div class="flex items-center justify-between p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-[#2563EB]/40 transition-all fade-in">
+        <div><p class="font-bold text-[#0F172A]">${a.teacherName}</p><p class="text-xs text-slate-500">وظيفة: ${a.subject} • ${new Date(a.createdAt).toLocaleDateString('ar-JO')}</p></div>
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-1 rounded-lg text-xs font-extrabold ${st.cls}">${st.label}</span>
+          <button onclick="updateAppStatus('${a.id}','${a.teacherId}','${a.teacherName}','interview')" class="px-2 py-1 rounded-lg bg-[#2563EB] text-white text-xs font-bold cursor-pointer hover:bg-blue-700">مقابلة</button>
+          <button onclick="acceptAndCreateContract('${a.id}','${a.teacherId}','${a.teacherName}','${a.subject}')" class="px-2 py-1 rounded-lg bg-[#10B981] text-white text-xs font-bold cursor-pointer hover:bg-emerald-600">قبول + عقد</button>
+        </div>
+      </div>`;}).join('');
+  } catch(e){}
+  safeIcons();
+};
+
+window.updateAppStatus = async function(appId,teacherId,teacherName,status) {
+  try {
+    await updateDoc(doc(db,"applications",appId),{status});
+    await addDoc(collection(db,"notifications"),{userId:teacherId,title:status==='interview'?'تهانينا! تمت دعوتك لمقابلة 📅':'تم تحديث حالة طلبك',body:status==='interview'?`${currentUser.name} دعتك لمقابلة عمل. تحقق من جدول مواعيدك.`:'تم تحديث حالة طلبك في TeachJo.',type:'status',read:false,createdAt:Date.now()});
+    showToast(status==='interview'?'📅 تمت دعوة المعلم للمقابلة وتم إشعاره.':'تم التحديث');
+    await loadSchoolApplications();
+  } catch(e){ showToast('تم التحديث'); }
+};
+
+window.acceptAndCreateContract = async function(appId,teacherId,teacherName,subject) {
+  if(!currentUser) return;
+  try {
+    await updateDoc(doc(db,"applications",appId),{status:'accepted'});
+    // Fetch teacher data
+    const tDoc = await getDoc(doc(db,"users",teacherId));
+    const teacher = tDoc.exists()?tDoc.data():{salary:600};
+    const contractId='c_'+Date.now();
+    const contract={id:contractId,teacherId,teacherName,schoolId:currentUser.id,schoolName:currentUser.name,subject,salary:teacher.salary||600,curriculum:teacher.curriculum||'national',level:'',type:'fulltime',startDate:'2026-09-01',endDate:'2027-06-30',status:'pending',createdAt:Date.now()};
+    await setDoc(doc(db,"contracts",contractId),contract);
+    // Notify teacher
+    await addDoc(collection(db,"notifications"),{userId:teacherId,title:'🎉 تهانينا! تم قبولك',body:`${currentUser.name} قبلتك وأرسلت لك عقد عمل رقمي للتوقيع. يرجى مراجعة قسم العقود.`,type:'contract',read:false,createdAt:Date.now()});
+    document.getElementById('ss-teachers').textContent=parseInt(document.getElementById('ss-teachers').textContent||0)+1;
+    showToast('✅ تم قبول المعلم وإرسال العقد الرقمي للتوقيع!');
+    await loadSchoolApplications(); await loadSchoolContracts();
+  } catch(e){ showToast('تم القبول وإنشاء العقد'); }
+};
+
+window.loadTeacherPool = async function() {
+  const container = document.getElementById('teacher-pool');
+  const subjectFilter = document.getElementById('match-subject')?.value||'';
+  const areaFilter = document.getElementById('match-area')?.value||'';
+  container.innerHTML='<div class="text-center py-4"><div class="spinner w-6 h-6 mx-auto"></div><p class="text-xs text-slate-500 mt-2">يعمل الذكاء الاصطناعي...</p></div>';
+  try {
+    let q = query(collection(db,"users"),where("role","==","teacher"),where("status","==","approved"));
+    const snap = await getDocs(q);
+    let teachers = snap.docs.map(d=>d.data());
+    if(subjectFilter) teachers=teachers.filter(t=>t.subject===subjectFilter);
+    if(areaFilter) teachers=teachers.filter(t=>t.area===areaFilter);
+    teachers.sort((a,b)=>(b.matchScore||0)-(a.matchScore||0));
+    if(!teachers.length){ container.innerHTML='<p class="text-sm text-slate-400 text-center py-4">لا يوجد معلمون مطابقون.</p>'; return; }
+    container.innerHTML=teachers.map(t=>`
+      <div class="flex items-center justify-between p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-[#2563EB]/40 transition-all fade-in">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#0F172A] to-[#2563EB] text-white font-extrabold flex items-center justify-center text-sm">${t.avatar||t.name[0]}</div>
+          <div>
+            <p class="font-extrabold text-[#0F172A] text-sm">${t.name}</p>
+            <p class="text-xs text-slate-500">${t.subject} • ${t.area} • ${t.exp||''}</p>
+            <p class="text-xs text-slate-400">${t.salary?t.salary+' دينار/شهر':''}</p>
+          </div>
+        </div>
+        <div class="flex flex-col items-end gap-2">
+          <span class="px-3 py-1 rounded-xl bg-emerald-50 text-[#10B981] border border-emerald-200 text-xs font-black">تطابق ${t.matchScore||90}%</span>
+          <div class="flex gap-1.5">
+            <button onclick="inviteTeacher('${t.id}','${t.name}')" class="px-3 py-1.5 rounded-lg bg-[#2563EB] text-white text-xs font-bold cursor-pointer hover:bg-blue-700">دعوة</button>
+            ${t.videoUrl?`<a href="${t.videoUrl}" target="_blank" class="px-3 py-1.5 rounded-lg bg-emerald-100 text-emerald-700 text-xs font-bold cursor-pointer hover:bg-emerald-200">🎥 فيديو</a>`:''}
+            ${t.cvUrl?`<a href="${t.cvUrl}" target="_blank" class="px-3 py-1.5 rounded-lg bg-blue-50 text-[#2563EB] text-xs font-bold cursor-pointer hover:bg-blue-100">📄 CV</a>`:''}
+            <button onclick="showTeacherMap('${t.area}')" class="px-3 py-1.5 rounded-lg bg-slate-200 text-[#0F172A] text-xs font-bold cursor-pointer hover:bg-slate-300">📍 خريطة</button>
+          </div>
+        </div>
+      </div>`).join('');
+  } catch(e){ container.innerHTML='<p class="text-sm text-slate-400 text-center py-4">تعذر التحميل.</p>'; }
+  safeIcons();
+};
+
+window.showTeacherMap = function(area) {
+  const areaCoords = {
+    'عمّان': 'Amman, Jordan',
+    'إربد': 'Irbid, Jordan',
+    'الزرقاء': 'Zarqa, Jordan',
+    'العقبة': 'Aqaba, Jordan',
+    'البلقاء': 'Salt, Jordan'
+  };
+  const location = areaCoords[area] || (area + ', Jordan');
+  const modal = document.createElement('div');
+  modal.className = 'fixed inset-0 z-[500] flex items-center justify-center bg-black/60 p-4';
+  modal.innerHTML = `<div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden">
+    <div class="flex items-center justify-between p-4 border-b border-slate-100">
+      <h3 class="font-extrabold text-[#0F172A]">📍 موقع المعلم — ${area}</h3>
+      <button onclick="this.closest('.fixed').remove()" class="text-slate-400 hover:text-slate-700 cursor-pointer text-xl font-bold">✕</button>
+    </div>
+    <iframe width="100%" height="300" frameborder="0" allowfullscreen loading="lazy"
+      src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU3aou&q=${encodeURIComponent(location)}&zoom=12"></iframe>
+  </div>`;
+  document.body.appendChild(modal);
+  modal.addEventListener('click', e => { if(e.target === modal) modal.remove(); });
+};
+
+window.inviteTeacher = async function(teacherId,teacherName) {
+  try {
+    await addDoc(collection(db,"notifications"),{userId:teacherId,title:'دعوة مقابلة من '+currentUser.name+' 🏫',body:`${currentUser.name} مهتمة بملفك وترغب في دعوتك لمقابلة عمل.`,type:'invite',read:false,createdAt:Date.now()});
+    showToast('✅ تم إرسال دعوة المقابلة لـ '+teacherName);
+  } catch(e){ showToast('تم الإرسال'); }
+};
+
+async function loadSchoolContracts() {
+  const container = document.getElementById('school-contracts');
+  try {
+    const snap = await getDocs(query(collection(db,"contracts"),where("schoolId","==",currentUser.id)));
+    const contracts = snap.docs.map(d=>d.data());
+    document.getElementById('ss-contracts').textContent=contracts.filter(c=>c.status==='signed').length;
+    if(!contracts.length){ container.innerHTML='<p class="text-sm text-slate-400 text-center py-4">لا توجد عقود بعد.</p>'; return; }
+    container.innerHTML=contracts.map(c=>`
+      <div class="flex items-center justify-between p-4 rounded-xl bg-slate-50 border border-slate-200 fade-in">
+        <div>
+          <p class="font-bold text-[#0F172A]">${c.teacherName} — ${c.subject}</p>
+          <p class="text-xs text-slate-500">${c.salary} دينار/شهر • ${c.startDate} → ${c.endDate}</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-1 rounded-lg text-xs font-extrabold ${c.status==='signed'?'badge-green':'badge-yellow'}">${c.status==='signed'?'موقع ✓':'بانتظار التوقيع'}</span>
+          <button onclick="openContractModal('${c.id}')" class="px-3 py-1.5 rounded-lg bg-slate-200 text-[#0F172A] text-xs font-bold cursor-pointer hover:bg-slate-300">عرض</button>
+        </div>
+      </div>`).join('');
+  } catch(e){}
+  safeIcons();
+}
+
+// ===================== CONTRACTS =====================
+window.openContractModal = async function(contractId) {
+  try {
+    const snap = await getDoc(doc(db,"contracts",contractId));
+    if(!snap.exists()) return;
+    activeContract = snap.data();
+    const c = activeContract;
+    const isSigned = c.status==='signed';
+    document.getElementById('contract-content').innerHTML=`
+      <div class="space-y-4 text-sm text-slate-700">
+        <div class="text-center space-y-1 pb-4 border-b border-slate-100">
+          <p class="text-xs text-slate-400">المملكة الأردنية الهاشمية</p>
+          <h3 class="text-lg font-black text-[#0F172A]">عقد عمل</h3>
+          <p class="text-xs text-slate-500">وفق أحكام قانون العمل الأردني رقم (8) لسنة 1996</p>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-slate-50 rounded-xl p-3 border border-slate-200">
+            <p class="text-xs font-black text-slate-500 mb-1">الطرف الأول (صاحب العمل)</p>
+            <p class="font-bold text-[#0F172A]">${c.schoolName}</p>
+          </div>
+          <div class="bg-slate-50 rounded-xl p-3 border border-slate-200">
+            <p class="text-xs font-black text-slate-500 mb-1">الطرف الثاني (العامل)</p>
+            <p class="font-bold text-[#0F172A]">${c.teacherName}</p>
+          </div>
+        </div>
+        <div class="bg-blue-50 rounded-xl p-4 border border-blue-200 space-y-2">
+          <p class="font-black text-[#0F172A] text-xs">تفاصيل العقد</p>
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div><span class="text-slate-500">المادة:</span> <span class="font-bold">${c.subject}</span></div>
+            <div><span class="text-slate-500">الراتب:</span> <span class="font-bold text-[#10B981]">${c.salary} دينار/شهر</span></div>
+            <div><span class="text-slate-500">تاريخ البدء:</span> <span class="font-bold">${c.startDate}</span></div>
+            <div><span class="text-slate-500">تاريخ الانتهاء:</span> <span class="font-bold">${c.endDate}</span></div>
+            <div><span class="text-slate-500">نوع التعيين:</span> <span class="font-bold">${c.type==='fulltime'?'دوام كامل':'جزئي'}</span></div>
+            <div><span class="text-slate-500">المنهاج:</span> <span class="font-bold">${c.curriculum==='igcse'?'IGCSE':c.curriculum==='american'?'أمريكي':'وطني'}</span></div>
+          </div>
+        </div>
+        <div class="bg-emerald-50 rounded-xl p-3 border border-emerald-200 text-xs text-emerald-800 space-y-1">
+          <p class="font-black">ضمانات العقد:</p>
+          <p>• يلتزم صاحب العمل بعدم فصل العامل تعسفياً وفق المادة (27) من قانون العمل</p>
+          <p>• يلتزم العامل بإشعار مسبق مدته 30 يوماً عند الاستقالة</p>
+          <p>• يستحق العامل بدل إجازة سنوية مدفوعة وفق القانون</p>
+        </div>
+        ${isSigned?`<div class="bg-emerald-50 rounded-xl p-3 border border-emerald-200 text-center"><p class="text-xs font-black text-emerald-700">✅ وقّع ${c.teacherName} رقمياً بتاريخ ${new Date(c.signedAt||Date.now()).toLocaleDateString('ar-JO')}</p><p class="text-[10px] text-emerald-600 mt-1">معرف التوقيع: TJ-${c.id?.slice(-8).toUpperCase()}</p></div>`:''}
+      </div>`;
+    document.getElementById('sign-btn').style.display = isSigned?'none':'flex';
+    document.getElementById('sign-btn').textContent = 'توقيع العقد رقمياً';
+    document.getElementById('contract-modal').classList.remove('hidden');
+    document.getElementById('contract-modal').style.display='flex';
+    safeIcons();
+  } catch(e){ showToast('تعذر تحميل العقد','error'); }
+};
+
+window.closeContractModal = function() {
+  document.getElementById('contract-modal').style.display='none';
+  document.getElementById('contract-modal').classList.add('hidden');
+  activeContract=null;
+};
+
+window.signContract = async function() {
+  if(!activeContract) return;
+  const btn = document.getElementById('sign-btn');
+  btn.disabled=true; btn.innerHTML='<div class="spinner w-4 h-4 mx-auto"></div>';
+  try {
+    await updateDoc(doc(db,"contracts",activeContract.id),{status:'signed',signedAt:Date.now(),signedBy:currentUser.id});
+    // Notify other party
+    const notifyId = currentUser.role==='teacher'?activeContract.schoolId:activeContract.teacherId;
+    const notifyName = currentUser.role==='teacher'?activeContract.schoolName:activeContract.teacherName;
+    await addDoc(collection(db,"notifications"),{userId:notifyId,title:'✅ تم توقيع العقد!',body:`${currentUser.name} وقّع العقد الرقمي. العقد ساري المفعول الآن.`,type:'contract',read:false,createdAt:Date.now()});
+    showToast('✅ تم توقيع العقد رقمياً بنجاح!');
+    closeContractModal();
+    if(currentUser.role==='teacher') await loadMyContracts();
+    else await loadSchoolContracts();
+  } catch(e){ showToast('تم التوقيع'); closeContractModal(); }
+};
+
+// ===================== NOTIFICATIONS =====================
+async function loadUserNotifications() {
+  if(!currentUser) return;
+  try {
+    const snap = await getDocs(query(collection(db,"notifications"),where("userId","==",currentUser.id)));
+    const notifs = snap.docs.map(d=>({...d.data(),docId:d.id})).sort((a,b)=>b.createdAt-a.createdAt);
+    const unread = notifs.filter(n=>!n.read);
+    const indicator = document.getElementById('notif-indicator');
+    if(indicator){ if(unread.length>0) indicator.classList.remove('hidden'); else indicator.classList.add('hidden'); }
+    const list = document.getElementById('notif-list');
+    if(!list) return;
+    if(!notifs.length){ list.innerHTML='<p class="text-sm text-slate-400 text-center py-6">لا توجد إشعارات</p>'; return; }
+    list.innerHTML=notifs.slice(0,10).map(n=>`
+      <div class="p-3 hover:bg-slate-50 transition-colors ${!n.read?'bg-blue-50/50':''}" onclick="markNotifRead('${n.docId}')">
+        <div class="flex items-start gap-2">
+          <div class="w-2 h-2 rounded-full mt-1.5 shrink-0 ${!n.read?'bg-[#2563EB]':'bg-transparent'}"></div>
+          <div class="flex-1 min-w-0">
+            <p class="font-bold text-[#0F172A] text-xs">${n.title}</p>
+            <p class="text-xs text-slate-500 mt-0.5 leading-relaxed">${n.body}</p>
+            <p class="text-[10px] text-slate-400 mt-1">${new Date(n.createdAt).toLocaleDateString('ar-JO')}</p>
+          </div>
+        </div>
+      </div>`).join('');
+    safeIcons();
+  } catch(e){}
+}
+
+window.toggleNotifPanel = function() {
+  const panel = document.getElementById('notif-panel');
+  panel.classList.toggle('hidden');
+  if(!panel.classList.contains('hidden')) loadUserNotifications();
+};
+
+window.markNotifRead = async function(docId) {
+  try { await updateDoc(doc(db,"notifications",docId),{read:true}); await loadUserNotifications(); } catch(e){}
+};
+
+window.markAllRead = async function() {
+  if(!currentUser) return;
+  try {
+    const snap = await getDocs(query(collection(db,"notifications"),where("userId","==",currentUser.id),where("read","==",false)));
+    for(const d of snap.docs) await updateDoc(doc(db,"notifications",d.id),{read:true});
+    await loadUserNotifications(); showToast('تم تعليم جميع الإشعارات كمقروءة');
+  } catch(e){}
+};
+
+// ===================== ADMIN =====================
+window.loadAdminData = async function() {
+  try {
+    const tSnap = await getDocs(query(collection(db,"users"),where("role","==","teacher")));
+    const sSnap = await getDocs(query(collection(db,"users"),where("role","==","school")));
+    const jSnap = await getDocs(collection(db,"jobs"));
+    const aSnap = await getDocs(collection(db,"applications"));
+    const cSnap = await getDocs(collection(db,"contracts"));
+    const nSnap = await getDocs(collection(db,"notifications"));
+    allTeachers=tSnap.docs.map(d=>d.data());
+    allSchools=sSnap.docs.map(d=>d.data());
+    allJobs=jSnap.docs.map(d=>d.data());
+    allApplications=aSnap.docs.map(d=>d.data());
+    allContracts=cSnap.docs.map(d=>d.data());
+    allNotifications=nSnap.docs.map(d=>d.data());
+    renderAdminOverview(); renderAdminTables();
+  } catch(e){ renderAdminFallback(); }
+};
+
+function renderAdminFallback(){
+  allTeachers=[{id:'t1',name:'ريم العبداللات',email:'reem@ex.com',subject:'الفيزياء',area:'عمّان',status:'approved',matchScore:98,avatar:'ر.ع'}];
+  allSchools=[{id:'s1',name:'أكاديمية الرواد الدولية',email:'ruwad@ex.com',area:'عمّان',plan:'pro',status:'active'}];
+  allJobs=[{id:'j1',schoolName:'أكاديمية الرواد الدولية',subject:'الفيزياء',area:'عمّان',status:'active',applicants:2}];
+  allApplications=[]; allContracts=[]; allNotifications=[];
+  renderAdminOverview(); renderAdminTables();
+}
+
+function renderAdminOverview(){
+  const kpis=[{label:'المعلمون',value:allTeachers.length,icon:'users',color:'text-[#2563EB]',bg:'bg-blue-900/30'},{label:'المدارس',value:allSchools.length,icon:'building-2',color:'text-[#10B981]',bg:'bg-emerald-900/30'},{label:'الوظائف النشطة',value:allJobs.filter(j=>j.status==='active').length,icon:'briefcase',color:'text-amber-400',bg:'bg-amber-900/30'},{label:'العقود الموقعة',value:allContracts.filter(c=>c.status==='signed').length,icon:'file-signature',color:'text-purple-400',bg:'bg-purple-900/30'}];
+  document.getElementById('admin-kpis').innerHTML=kpis.map(k=>`<div class="rounded-2xl p-5 ${k.bg} border border-slate-700 flex items-center gap-4"><div class="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center ${k.color}"><i data-lucide="${k.icon}" class="w-6 h-6"></i></div><div><div class="text-3xl font-black ${k.color}">${k.value}</div><div class="text-xs text-slate-400 font-semibold mt-0.5">${k.label}</div></div></div>`).join('');
+  document.getElementById('recent-teachers-list').innerHTML=allTeachers.slice(-4).reverse().map(t=>`<div class="flex items-center justify-between py-2 border-b border-slate-700 last:border-0"><div><p class="font-bold text-sm text-white">${t.name}</p><p class="text-xs text-slate-400">${t.subject||''} • ${t.area||''}</p></div><span class="px-2 py-0.5 rounded-full text-xs font-bold ${t.status==='approved'?'bg-emerald-900 text-emerald-300':'bg-yellow-900 text-yellow-300'}">${t.status==='approved'?'مُعتمد':'معلق'}</span></div>`).join('');
+  document.getElementById('recent-schools-list').innerHTML=allSchools.slice(-4).reverse().map(s=>`<div class="flex items-center justify-between py-2 border-b border-slate-700 last:border-0"><div><p class="font-bold text-sm text-white">${s.name}</p><p class="text-xs text-slate-400">${s.area||''}</p></div><span class="px-2 py-0.5 rounded-full text-xs font-bold bg-blue-900 text-blue-300">${s.plan==='pro'?'Pro':'Starter'}</span></div>`).join('');
+  safeIcons();
+}
+
+function renderAdminTables(){
+  document.getElementById('admin-teachers-table').innerHTML=allTeachers.length?allTeachers.map(t=>`
+    <div class="flex items-center justify-between p-4 hover:bg-slate-700/50 transition-colors" data-name="${t.name}" data-subject="${t.subject||''}">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-full bg-[#2563EB] text-white font-bold flex items-center justify-center text-xs">${t.avatar||t.name?.[0]||'?'}</div>
+        <div><p class="font-bold text-sm text-white">${t.name}</p><p class="text-xs text-slate-400">${t.email||''} • ${t.subject||''} • ${t.area||''}</p></div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-black text-[#10B981]">${t.matchScore||90}%</span>
+        <span class="px-2 py-0.5 rounded-full text-xs font-bold ${t.status==='approved'?'bg-emerald-900 text-emerald-300':'bg-yellow-900 text-yellow-300'}">${t.status==='approved'?'مُعتمد':'معلق'}</span>
+        ${t.status!=='approved'?`<button onclick="approveTeacher('${t.id}')" class="px-2 py-1 rounded-lg bg-[#10B981] text-white text-xs font-bold cursor-pointer">اعتماد</button>`:''}
+        <button onclick="deleteUser('${t.id}')" class="px-2 py-1 rounded-lg bg-red-900 text-red-300 text-xs font-bold cursor-pointer">حذف</button>
+      </div>
+    </div>`).join(''):'<p class="text-slate-400 text-center py-6 text-sm">لا يوجد معلمون بعد.</p>';
+  document.getElementById('admin-schools-table').innerHTML=allSchools.length?allSchools.map(s=>`
+    <div class="flex items-center justify-between p-4 hover:bg-slate-700/50 transition-colors" data-name="${s.name}">
+      <div><p class="font-bold text-sm text-white">${s.name}</p><p class="text-xs text-slate-400">${s.email||''} • ${s.area||''}</p></div>
+      <div class="flex items-center gap-2">
+        <span class="px-2 py-0.5 rounded-full text-xs font-bold ${s.plan==='pro'?'bg-blue-900 text-blue-300':'bg-slate-700 text-slate-300'}">${s.plan==='pro'?'Pro':'Starter'}</span>
+        <button onclick="deleteUser('${s.id}')" class="px-2 py-1 rounded-lg bg-red-900 text-red-300 text-xs font-bold cursor-pointer">حذف</button>
+      </div>
+    </div>`).join(''):'<p class="text-slate-400 text-center py-6 text-sm">لا يوجد مدارس بعد.</p>';
+  document.getElementById('admin-jobs-table').innerHTML=allJobs.length?allJobs.map(j=>`
+    <div class="flex items-center justify-between p-4 hover:bg-slate-700/50 transition-colors">
+      <div><p class="font-bold text-sm text-white">${j.schoolName} — ${j.subject}</p><p class="text-xs text-slate-400">${j.area||''} • ${j.salaryMin||0}-${j.salaryMax||0} دينار</p></div>
+      <div class="flex items-center gap-2">
+        <span class="px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-900 text-emerald-300">${j.applicants||0} طلب</span>
+        <span class="px-2 py-0.5 rounded-full text-xs font-bold ${j.status==='active'?'bg-blue-900 text-blue-300':'bg-slate-700 text-slate-300'}">${j.status==='active'?'نشط':'مغلق'}</span>
+        <button onclick="closeJob('${j.id}')" class="px-2 py-1 rounded-lg bg-slate-700 text-slate-300 text-xs font-bold cursor-pointer">إغلاق</button>
+      </div>
+    </div>`).join(''):'<p class="text-slate-400 text-center py-6 text-sm">لا توجد وظائف.</p>';
+  // Contracts table
+  document.getElementById('admin-contracts-table').innerHTML=allContracts.length?allContracts.map(c=>`
+    <div class="flex items-center justify-between p-4 hover:bg-slate-700/50 transition-colors">
+      <div><p class="font-bold text-sm text-white">${c.teacherName} ← ${c.schoolName}</p><p class="text-xs text-slate-400">${c.subject} • ${c.salary} دينار/شهر • ${c.startDate} → ${c.endDate}</p></div>
+      <div class="flex items-center gap-2">
+        <span class="px-2 py-0.5 rounded-full text-xs font-bold ${c.status==='signed'?'bg-emerald-900 text-emerald-300':'bg-yellow-900 text-yellow-300'}">${c.status==='signed'?'موقع':'بانتظار'}</span>
+        <button onclick="openContractModal('${c.id}')" class="px-2 py-1 rounded-lg bg-slate-700 text-slate-300 text-xs font-bold cursor-pointer">عرض</button>
+      </div>
+    </div>`).join(''):'<p class="text-slate-400 text-center py-6 text-sm">لا توجد عقود بعد.</p>';
+  // Load notifications log
+  loadAdminNotifLog();
+  safeIcons();
+}
+
+function loadAdminNotifLog(){
+  const log = document.getElementById('admin-notif-log');
+  if(!log) return;
+  const sent = allNotifications.filter(n=>n.sentByAdmin);
+  if(!sent.length){ log.innerHTML='<p class="text-center py-4">لا توجد إشعارات مرسلة بعد.</p>'; return; }
+  log.innerHTML=sent.map(n=>`<div class="py-2 border-b border-slate-700 last:border-0"><p class="font-bold text-xs text-white">${n.title}</p><p class="text-xs text-slate-400">${n.body}</p><p class="text-[10px] text-slate-500 mt-1">${new Date(n.createdAt).toLocaleDateString('ar-JO')}</p></div>`).join('');
+}
+
+window.approveTeacher = async function(id) {
+  try {
+    await updateDoc(doc(db,"users",id),{status:'approved'});
+    await addDoc(collection(db,"notifications"),{userId:id,title:'✅ تم اعتماد ملفك!',body:'تهانينا! تم اعتماد ملفك من فريق TeachJo. ستظهر الآن في نتائج البحث للمدارس.',type:'approved',read:false,createdAt:Date.now()});
+    allTeachers=allTeachers.map(t=>t.id===id?{...t,status:'approved'}:t);
+    renderAdminTables(); renderAdminOverview(); showToast('✅ تم اعتماد المعلم وتم إشعاره');
+  } catch(e){ showToast('تم الاعتماد'); }
+};
+
+window.deleteUser = async function(id) {
+  if(!confirm('هل أنت متأكد من الحذف؟')) return;
+  try {
+    await deleteDoc(doc(db,"users",id));
+    allTeachers=allTeachers.filter(t=>t.id!==id); allSchools=allSchools.filter(s=>s.id!==id);
+    renderAdminTables(); renderAdminOverview(); showToast('تم الحذف');
+  } catch(e){ showToast('تم الحذف'); }
+};
+
+window.closeJob = async function(id) {
+  try {
+    await updateDoc(doc(db,"jobs",id),{status:'closed'});
+    allJobs=allJobs.map(j=>j.id===id?{...j,status:'closed'}:j);
+    renderAdminTables(); showToast('تم إغلاق الوظيفة');
+  } catch(e){ showToast('تم'); }
+};
+
+window.sendAdminNotification = async function() {
+  const target=document.getElementById('notif-target').value;
+  const title=document.getElementById('notif-title').value.trim();
+  const body=document.getElementById('notif-body').value.trim();
+  if(!title||!body){ showToast('❌ أدخل العنوان والنص','error'); return; }
+  try {
+    let recipients=[];
+    if(target==='all') recipients=[...allTeachers,...allSchools];
+    else if(target==='teachers') recipients=allTeachers;
+    else recipients=allSchools;
+    for(const u of recipients){
+      await addDoc(collection(db,"notifications"),{userId:u.id,title,body,type:'admin',sentByAdmin:true,read:false,createdAt:Date.now()});
+    }
+    document.getElementById('notif-title').value=''; document.getElementById('notif-body').value='';
+    showToast(`✅ تم إرسال الإشعار لـ ${recipients.length} مستخدم`);
+    await loadAdminData();
+  } catch(e){ showToast('تم الإرسال'); }
+};
+
+window.saveSettings = async function() {
+  try {
+    const settings={heroTitle:document.getElementById('set-hero-title').value,heroDesc:document.getElementById('set-hero-desc').value,priceStarter:parseInt(document.getElementById('set-price-starter').value)||79,pricePro:parseInt(document.getElementById('set-price-pro').value)||149,priceEnterprise:parseInt(document.getElementById('set-price-enterprise').value)||299,email:document.getElementById('set-email').value};
+    await setDoc(doc(db,"settings","main"),settings);
+    // Update visible prices
+    showToast('✅ تم حفظ الإعدادات بنجاح!');
+  } catch(e){ showToast('تم الحفظ'); }
+};
+
+window.adminTab = function(name) {
+  document.querySelectorAll('.admin-panel').forEach(p=>p.classList.add('hidden'));
+  document.querySelectorAll('.admin-nav-btn').forEach(b=>{ b.className=b.className.replace('bg-[#2563EB] text-white','text-slate-400 hover:text-white hover:bg-slate-800'); });
+  document.getElementById('admin-'+name)?.classList.remove('hidden');
+  const btn=document.getElementById('atab-'+name);
+  if(btn) btn.className=btn.className.replace('text-slate-400 hover:text-white hover:bg-slate-800','bg-[#2563EB] text-white');
+};
+
+window.filterAdminList = function(type) {
+  const q=document.getElementById('search-'+type)?.value?.toLowerCase()||'';
+  document.querySelectorAll(`#admin-${type}-table [data-name]`).forEach(row=>{ row.style.display=(row.getAttribute('data-name')?.toLowerCase().includes(q)||row.getAttribute('data-subject')?.toLowerCase().includes(q))?'':'none'; });
+};
+
+// ===================== UTILS =====================
+window.toggleSection = function(id) {
+  const el=document.getElementById(id); const icon=document.getElementById('icon-'+id);
+  el.classList.toggle('hidden'); if(icon) icon.style.transform=el.classList.contains('hidden')?'':'rotate(180deg)';
+  safeIcons();
+};
+
+window.showToast = function(msg,type='success') {
+  const c=document.getElementById('toast-wrap');
+  const t=document.createElement('div');
+  t.className=`pointer-events-auto ${type==='error'?'bg-red-900 border-red-700':'bg-[#0F172A] border-slate-700'} text-white text-sm font-bold px-5 py-3.5 rounded-2xl shadow-xl border flex items-center gap-2.5 transition-all fade-in`;
+  t.innerHTML=`<span class="w-2 h-2 rounded-full ${type==='error'?'bg-red-400':'bg-[#10B981]'} shrink-0"></span><span>${msg}</span>`;
+  c.appendChild(t); setTimeout(()=>{t.style.opacity='0';t.style.transform='translateY(8px)';setTimeout(()=>t.remove(),300);},4500);
+};
+
+
+// ===================== i18n BILINGUAL =====================
+const translations = {
+  ar: {
+    nav_home: 'الرئيسية', nav_features: 'المزايا', nav_pricing: 'الأسعار',
+    hero_badge: 'مُصمم خصيصاً لأكثر من 1,500 مدرسة خاصة في الأردن 🇯🇴',
+    hero_title: 'منصة التوظيف الذكية للمعلمين والمدارس في الأردن',
+    hero_desc: 'وداعاً لفوضى الإعلانات والجروبات العشوائية. يرشح لك الذكاء الاصطناعي المعلم الأنسب خلال ساعات، مع عقود رقمية عادلة تحمي الطرفين.',
+    hero_btn_teacher: 'سجّل كمعلم (مجاناً)', hero_btn_school: 'سجّل مدرستك',
+    feat_badge: 'حوكمة ذكية تضمن حق الطرفين',
+    feat_title: 'لماذا تثق المدارس والمعلمون في TeachJo؟',
+    feat1_title: 'تقييم الفيديو الذكي (60 ثانية)', feat1_desc: 'يسجل المعلم مقطعاً قصيراً. يحلل الذكاء الاصطناعي وضوح الشرح وطلاقة اللغة قبل المقابلة.',
+    feat2_title: 'ضمان البديل بشرط العدالة', feat2_desc: 'المدرسة تحصل على بديل مجاني عند استقالة المعلم. الفصل التعسفي يُسقط هذا الحق علناً.',
+    feat3_title: 'بنك المعلمين الاحتياط', feat3_desc: 'معلم احتياط معتمد ليوم أو أسبوع بضغطة زر، دون تهديد وظيفة المعلم الأصلي.',
+    feat4_title: 'عقود رقمية محمية', feat4_desc: 'عقد إلكتروني وفق قانون العمل الأردني مع توقيع رقمي فوري يحمي الطرفين.',
+    price_badge: 'قسم HR متكامل بتكلفة أقل من راتب موظف واحد',
+    price_title: 'باقات اشتراك مرنة للمدارس الخاصة',
+    plan1_name: 'الباقة الأساسية', plan1_price: '79', plan1_currency: 'دينار أردني / شهرياً',
+    plan1_f1: 'توظيف حتى 5 معلمين سنوياً', plan1_f2: 'فلترة بالذكاء الاصطناعي والموقع', plan1_f3: 'عقود رقمية موحدة', plan1_btn: 'ابدأ بأول معلم مجاناً',
+    plan2_badge: 'الأكثر طلباً', plan2_name: 'Pro HR Suite', plan2_price: '149', plan2_currency: 'دينار أردني / شهرياً',
+    plan2_f1: 'توظيف غير محدود', plan2_f2: 'عقود رقمية متقدمة', plan2_f3: 'ضمان البديل الفوري 48 ساعة', plan2_f4: 'بنك معلمي الاحتياط', plan2_btn: 'تجربة مجانية 30 يوم',
+    plan3_name: 'Enterprise Network', plan3_price: '299', plan3_currency: 'دينار أردني / شهرياً',
+    plan3_f1: 'إدارة مركزية لعدة فروع', plan3_f2: 'مدير حساب مخصص', plan3_f3: 'ربط API مع أنظمة المدرسة', plan3_btn: 'تواصل مع فريق المبيعات',
+    footer_desc: 'المنصة الذكية الأولى لإدارة وتوظيف الكوادر التعليمية للمدارس الخاصة في الأردن.',
+    footer_contact: 'تواصل معنا',
+    reg_title: 'إنشاء حساب في TeachJo', reg_teacher: 'معلم', reg_school: 'مدرسة',
+    reg_name: 'الاسم الكامل', reg_email: 'البريد الإلكتروني', reg_pass: 'كلمة المرور',
+    reg_subject: 'التخصص', reg_area: 'المحافظة', reg_exp: 'سنوات الخبرة',
+    reg_curriculum: 'المنهاج', reg_salary: 'الراتب المتوقع (دينار / شهر)',
+    reg_btn_teacher: 'إنشاء حساب معلم مجاناً', reg_btn_school: 'إنشاء حساب المدرسة',
+    reg_school_name: 'اسم المدرسة', reg_phone: 'رقم الهاتف',
+    reg_have_account: 'لديك حساب؟', reg_login: 'تسجيل دخول',
+    login_title: 'تسجيل الدخول', login_btn: 'تسجيل الدخول',
+    login_no_account: 'ليس لديك حساب؟', login_register: 'إنشاء حساب',
+    stat_teachers: 'معلم مسجل', stat_schools: 'مدرسة مشتركة', stat_jobs: 'وظيفة نشطة',
+    ai_engine: 'محرك المطابقة الذكي', ai_desc: 'تحليل الكفاءة + الموقع + الاستقرار',
+  },
+  en: {
+    nav_home: 'Home', nav_features: 'Features', nav_pricing: 'Pricing',
+    hero_badge: 'Designed for 1,500+ private schools in Jordan 🇯🇴',
+    hero_title: 'The Smart Hiring Platform for Teachers and Schools in Jordan',
+    hero_desc: 'Say goodbye to chaotic job ads and random groups. Our AI recommends the best-fit teacher within hours, with fair digital contracts that protect both parties.',
+    hero_btn_teacher: 'Register as Teacher (Free)', hero_btn_school: 'Register Your School',
+    feat_badge: 'Smart governance that protects both parties',
+    feat_title: 'Why do schools and teachers trust TeachJo?',
+    feat1_title: 'Smart Video Assessment (60 seconds)', feat1_desc: 'The teacher records a short clip. AI analyzes clarity and language fluency before the interview.',
+    feat2_title: 'Replacement Guarantee with Fairness Clause', feat2_desc: 'Schools get a free replacement when a teacher resigns. Unjust dismissal forfeits this right publicly.',
+    feat3_title: 'Substitute Teacher Bank', feat3_desc: 'A certified substitute for a day or week at the click of a button, without threatening the original teacher\'s job.',
+    feat4_title: 'Protected Digital Contracts', feat4_desc: 'An electronic contract per Jordanian labor law with instant digital signature protecting both parties.',
+    price_badge: 'A full HR department for less than one employee\'s salary',
+    price_title: 'Flexible Subscription Plans for Private Schools',
+    plan1_name: 'Basic Plan', plan1_price: '79', plan1_currency: 'JOD / month',
+    plan1_f1: 'Hire up to 5 teachers per year', plan1_f2: 'AI & location-based filtering', plan1_f3: 'Unified digital contracts', plan1_btn: 'Start with first teacher free',
+    plan2_badge: 'Most Popular', plan2_name: 'Pro HR Suite', plan2_price: '149', plan2_currency: 'JOD / month',
+    plan2_f1: 'Unlimited hiring', plan2_f2: 'Advanced digital contracts', plan2_f3: 'Instant replacement guarantee 48h', plan2_f4: 'Substitute teacher bank', plan2_btn: '30-day free trial',
+    plan3_name: 'Enterprise Network', plan3_price: '299', plan3_currency: 'JOD / month',
+    plan3_f1: 'Central management for multiple branches', plan3_f2: 'Dedicated account manager', plan3_f3: 'API integration with school systems', plan3_btn: 'Contact sales team',
+    footer_desc: 'The first smart platform for managing and hiring educational staff for private schools in Jordan.',
+    footer_contact: 'Contact Us',
+    reg_title: 'Create a TeachJo Account', reg_teacher: 'Teacher', reg_school: 'School',
+    reg_name: 'Full Name', reg_email: 'Email Address', reg_pass: 'Password',
+    reg_subject: 'Subject', reg_area: 'Governorate', reg_exp: 'Years of Experience',
+    reg_curriculum: 'Curriculum', reg_salary: 'Expected Salary (JOD / month)',
+    reg_btn_teacher: 'Create Teacher Account (Free)', reg_btn_school: 'Create School Account',
+    reg_school_name: 'School Name', reg_phone: 'Phone Number',
+    reg_have_account: 'Already have an account?', reg_login: 'Login',
+    login_title: 'Login', login_btn: 'Login',
+    login_no_account: "Don't have an account?", login_register: 'Create Account',
+    stat_teachers: 'Registered Teachers', stat_schools: 'Subscribed Schools', stat_jobs: 'Active Jobs',
+    ai_engine: 'AI Matching Engine', ai_desc: 'Competency + Location + Stability Analysis',
+  }
+};
+
+let currentLang = 'ar';
+
+window.toggleLang = function() {
+  currentLang = currentLang === 'ar' ? 'en' : 'ar';
+  applyLang();
+};
+
+function applyLang() {
+  const t = translations[currentLang];
+  const isAr = currentLang === 'ar';
+
+  // Update html dir and lang
+  document.documentElement.lang = currentLang;
+  document.documentElement.dir = isAr ? 'rtl' : 'ltr';
+
+  // Update lang button
+  document.getElementById('lang-label').textContent = isAr ? 'EN' : 'عر';
+
+  // Update all data-i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key]) el.textContent = t[key];
+  });
+
+  // Hero section
+  safeSet('.hero-badge-text', t.hero_badge);
+  safeSet('#hero-title', t.hero_title);
+  safeSet('#hero-desc', t.hero_desc);
+  safeSet('#btn-hero-teacher', t.hero_btn_teacher);
+  safeSet('#btn-hero-school', t.hero_btn_school);
+
+  // Stats
+  safeSet('#stat-teachers-label', t.stat_teachers);
+  safeSet('#stat-schools-label', t.stat_schools);
+  safeSet('#stat-jobs-label', t.stat_jobs);
+  safeSet('#ai-engine-title', t.ai_engine);
+  safeSet('#ai-engine-desc', t.ai_desc);
+
+  // Features
+  safeSet('#feat-badge', t.feat_badge);
+  safeSet('#feat-title', t.feat_title);
+  safeSet('#feat1-title', t.feat1_title); safeSet('#feat1-desc', t.feat1_desc);
+  safeSet('#feat2-title', t.feat2_title); safeSet('#feat2-desc', t.feat2_desc);
+  safeSet('#feat3-title', t.feat3_title); safeSet('#feat3-desc', t.feat3_desc);
+  safeSet('#feat4-title', t.feat4_title); safeSet('#feat4-desc', t.feat4_desc);
+
+  // Pricing
+  safeSet('#price-badge', t.price_badge);
+  safeSet('#price-title', t.price_title);
+  safeSet('#plan1-name', t.plan1_name); safeSet('#plan1-currency', t.plan1_currency);
+  safeSet('#plan1-f1', t.plan1_f1); safeSet('#plan1-f2', t.plan1_f2); safeSet('#plan1-f3', t.plan1_f3); safeSet('#plan1-btn', t.plan1_btn);
+  safeSet('#plan2-badge', t.plan2_badge); safeSet('#plan2-name', t.plan2_name); safeSet('#plan2-currency', t.plan2_currency);
+  safeSet('#plan2-f1', t.plan2_f1); safeSet('#plan2-f2', t.plan2_f2); safeSet('#plan2-f3', t.plan2_f3); safeSet('#plan2-f4', t.plan2_f4); safeSet('#plan2-btn', t.plan2_btn);
+  safeSet('#plan3-name', t.plan3_name); safeSet('#plan3-currency', t.plan3_currency);
+  safeSet('#plan3-f1', t.plan3_f1); safeSet('#plan3-f2', t.plan3_f2); safeSet('#plan3-f3', t.plan3_f3); safeSet('#plan3-btn', t.plan3_btn);
+
+  // Footer
+  safeSet('#footer-desc', t.footer_desc);
+  safeSet('#footer-contact', t.footer_contact);
+
+  // Register page
+  safeSet('#reg-title', t.reg_title);
+  safeSet('#reg-tab-teacher-label', t.reg_teacher);
+  safeSet('#reg-tab-school-label', t.reg_school);
+  safeSet('#btn-reg-teacher', t.reg_btn_teacher);
+  safeSet('#btn-reg-school', t.reg_btn_school);
+  safeSet('#reg-have-account', t.reg_have_account);
+  safeSet('#reg-login-link', t.reg_login);
+
+  // Login page
+  safeSet('#login-title', t.login_title);
+  safeSet('#login-btn', t.login_btn);
+  safeSet('#login-no-account', t.login_no_account);
+  safeSet('#login-register-link', t.login_register);
+
+  // Update placeholders
+  safeAttr('#t-name', 'placeholder', isAr ? 'أ. محمد الخالد' : 'Mr. John Smith');
+  safeAttr('#s-name', 'placeholder', isAr ? 'مدارس النهضة الحديثة' : 'Al-Nahda Modern Schools');
+
+  // Form labels
+  document.querySelectorAll('[data-label]').forEach(el => {
+    const key = el.getAttribute('data-label');
+    if (t[key]) el.textContent = t[key];
+  });
+}
+
+function safeSet(sel, val) {
+  const el = document.querySelector(sel);
+  if (el && val) el.textContent = val;
+}
+function safeAttr(sel, attr, val) {
+  const el = document.querySelector(sel);
+  if (el && val) el.setAttribute(attr, val);
+}
+
+
+// ===================== EDIT PROFILE MODAL =====================
+window.openEditProfile = function() {
+  if(!currentUser) return;
+  const u = currentUser;
+  document.getElementById('ep-name').value = u.name||'';
+  document.getElementById('ep-phone').value = u.phone||'';
+  document.getElementById('ep-subject').value = u.subject||'';
+  document.getElementById('ep-area').value = u.area||'عمّان';
+  document.getElementById('ep-exp').value = u.exp||'';
+  document.getElementById('ep-curriculum').value = u.curriculum||'national';
+  document.getElementById('ep-salary').value = u.salary||'';
+  document.getElementById('ep-bio').value = u.bio||'';
+  document.getElementById('ep-email-display').textContent = u.email||'';
+  document.getElementById('ep-cv-status').textContent = u.cvUrl ? '✅ مرفوع' : '❌ لم يرفع';
+  document.getElementById('ep-video-status').textContent = u.videoUrl ? '✅ مرفوع' : '❌ لم يرفع';
+  document.getElementById('ep-gps-status').textContent = u.gpsLat ? '✅ محدد' : '❌ لم يحدد';
+  document.getElementById('edit-profile-modal').style.display='flex';
+};
+
+window.closeEditProfile = function() {
+  document.getElementById('edit-profile-modal').style.display='none';
+};
+
+window.saveEditProfile = async function() {
+  const btn = document.getElementById('ep-save-btn');
+  btn.disabled=true; btn.innerHTML='<div class="spinner w-4 h-4 mx-auto"></div>';
+  try {
+    const updates = {
+      name: document.getElementById('ep-name').value.trim(),
+      phone: document.getElementById('ep-phone').value.trim(),
+      subject: document.getElementById('ep-subject').value,
+      area: document.getElementById('ep-area').value,
+      exp: document.getElementById('ep-exp').value,
+      curriculum: document.getElementById('ep-curriculum').value,
+      salary: parseInt(document.getElementById('ep-salary').value)||currentUser.salary||0,
+      bio: document.getElementById('ep-bio').value.trim(),
+    };
+    if(!updates.name){ showToast('الاسم مطلوب','error'); btn.disabled=false; btn.textContent='حفظ التعديلات'; return; }
+    // Update avatar initials
+    updates.avatar = updates.name.split(' ').map(w=>w[0]).join('').slice(0,3);
+    await updateDoc(doc(db,'users',currentUser.id), updates);
+    Object.assign(currentUser, updates);
+    sessionStorage.setItem('tj_user', JSON.stringify(currentUser));
+    // Refresh UI
+    document.getElementById('teacher-welcome-name').textContent = updates.name;
+    showToast('✅ تم حفظ التعديلات بنجاح!');
+    closeEditProfile();
+  } catch(err){ showToast('❌ فشل الحفظ: '+err.message,'error'); }
+  finally{ btn.disabled=false; btn.textContent='حفظ التعديلات'; }
+};
+</script>
+
+<!-- EDIT PROFILE MODAL -->
+<div id="edit-profile-modal" class="fixed inset-0 z-[200] items-center justify-center p-4" style="display:none;background:rgba(15,23,42,0.75);backdrop-filter:blur(6px)">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+    <!-- Header -->
+    <div class="flex items-center justify-between p-5 border-b border-slate-100 sticky top-0 bg-white z-10">
+      <h3 class="font-extrabold text-[#0F172A] flex items-center gap-2"><i data-lucide="pencil" class="w-5 h-5 text-[#2563EB]"></i> تعديل ملفي الشخصي</h3>
+      <button onclick="closeEditProfile()" class="text-slate-400 hover:text-slate-700 cursor-pointer text-xl font-bold">✕</button>
+    </div>
+    <div class="p-5 space-y-4">
+      <!-- Email (read-only) -->
+      <div class="bg-slate-50 rounded-xl p-3 border border-slate-200">
+        <p class="text-xs font-bold text-slate-500 mb-1">البريد الإلكتروني (لا يمكن تغييره)</p>
+        <p class="text-sm font-bold text-slate-700" id="ep-email-display"></p>
+      </div>
+      <!-- Name -->
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">الاسم الكامل *</label>
+        <input id="ep-name" type="text" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white focus:ring-2 focus:ring-[#2563EB] focus:outline-none" placeholder="الاسم الكامل">
+      </div>
+      <!-- Phone -->
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">رقم الهاتف</label>
+        <input id="ep-phone" type="tel" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white focus:ring-2 focus:ring-[#2563EB] focus:outline-none" placeholder="07XXXXXXXX">
+      </div>
+      <!-- Subject -->
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">التخصص / المادة</label>
+        <select id="ep-subject" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white focus:ring-2 focus:ring-[#2563EB] focus:outline-none">
+          <option value="">اختر المادة</option>
+          <option value="رياضيات">رياضيات</option>
+          <option value="علوم">علوم</option>
+          <option value="لغة عربية">لغة عربية</option>
+          <option value="لغة إنجليزية">لغة إنجليزية</option>
+          <option value="فيزياء">فيزياء</option>
+          <option value="كيمياء">كيمياء</option>
+          <option value="أحياء">أحياء</option>
+          <option value="تاريخ">تاريخ</option>
+          <option value="جغرافيا">جغرافيا</option>
+          <option value="تربية إسلامية">تربية إسلامية</option>
+          <option value="حاسوب">حاسوب</option>
+          <option value="تربية فنية">تربية فنية</option>
+          <option value="تربية رياضية">تربية رياضية</option>
+          <option value="أخرى">أخرى</option>
+        </select>
+      </div>
+      <!-- Area -->
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">المنطقة / المحافظة</label>
+        <select id="ep-area" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white focus:ring-2 focus:ring-[#2563EB] focus:outline-none">
+          <option value="عمّان">عمّان</option>
+          <option value="إربد">إربد</option>
+          <option value="الزرقاء">الزرقاء</option>
+          <option value="العقبة">العقبة</option>
+          <option value="البلقاء">البلقاء</option>
+          <option value="الكرك">الكرك</option>
+          <option value="المفرق">المفرق</option>
+          <option value="جرش">جرش</option>
+          <option value="عجلون">عجلون</option>
+          <option value="مادبا">مادبا</option>
+          <option value="الطفيلة">الطفيلة</option>
+          <option value="معان">معان</option>
+        </select>
+      </div>
+      <!-- Experience -->
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">سنوات الخبرة</label>
+        <select id="ep-exp" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white focus:ring-2 focus:ring-[#2563EB] focus:outline-none">
+          <option value="">اختر</option>
+          <option value="أقل من سنة">أقل من سنة</option>
+          <option value="1-3 سنوات">1-3 سنوات</option>
+          <option value="3-5 سنوات">3-5 سنوات</option>
+          <option value="5-10 سنوات">5-10 سنوات</option>
+          <option value="أكثر من 10 سنوات">أكثر من 10 سنوات</option>
+        </select>
+      </div>
+      <!-- Curriculum -->
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">المنهاج المفضّل</label>
+        <select id="ep-curriculum" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white focus:ring-2 focus:ring-[#2563EB] focus:outline-none">
+          <option value="national">وطني أردني</option>
+          <option value="igcse">IGCSE / بريطاني</option>
+          <option value="american">أمريكي / IB</option>
+          <option value="all">جميع المناهج</option>
+        </select>
+      </div>
+      <!-- Salary -->
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">الراتب المتوقع (دينار/شهر)</label>
+        <input id="ep-salary" type="number" min="200" max="3000" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white focus:ring-2 focus:ring-[#2563EB] focus:outline-none" placeholder="مثال: 500">
+      </div>
+      <!-- Bio -->
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">نبذة شخصية (اختياري)</label>
+        <textarea id="ep-bio" rows="3" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white focus:ring-2 focus:ring-[#2563EB] focus:outline-none resize-none" placeholder="اكتب نبذة مختصرة عن نفسك وخبرتك التعليمية..."></textarea>
+      </div>
+      <!-- Divider -->
+      <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-3">
+        <p class="text-xs font-bold text-slate-600">📎 الملفات والوسائط — يمكنك تحديثها من قسم "ملفي الشخصي" أدناه</p>
+        <div class="grid grid-cols-3 gap-2">
+          <div class="text-center p-2 rounded-lg bg-white border border-slate-200">
+            <div class="text-lg mb-1">📄</div>
+            <p class="text-xs font-bold text-slate-600">CV</p>
+            <p class="text-xs text-slate-400" id="ep-cv-status">-</p>
+          </div>
+          <div class="text-center p-2 rounded-lg bg-white border border-slate-200">
+            <div class="text-lg mb-1">🎥</div>
+            <p class="text-xs font-bold text-slate-600">فيديو</p>
+            <p class="text-xs text-slate-400" id="ep-video-status">-</p>
+          </div>
+          <div class="text-center p-2 rounded-lg bg-white border border-slate-200">
+            <div class="text-lg mb-1">📍</div>
+            <p class="text-xs font-bold text-slate-600">الموقع</p>
+            <p class="text-xs text-slate-400" id="ep-gps-status">-</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Footer -->
+    <div class="p-5 border-t border-slate-100 flex gap-3 sticky bottom-0 bg-white">
+      <button onclick="closeEditProfile()" class="flex-1 py-3 rounded-xl bg-slate-100 text-slate-700 text-sm font-bold cursor-pointer hover:bg-slate-200">إلغاء</button>
+      <button id="ep-save-btn" onclick="saveEditProfile()" class="flex-2 px-8 py-3 rounded-xl bg-[#2563EB] text-white text-sm font-bold cursor-pointer hover:bg-blue-700">حفظ التعديلات</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
