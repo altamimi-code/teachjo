@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TeachJo | منصة توظيف المعلمين بالذكاء الاصطناعي</title>
-<script src="https://cdn.tailwindcss.com/3.4.1/tailwind.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap&display=swap" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet"></noscript>
 <script src="https://unpkg.com/lucide@0.263.1/dist/umd/lucide.min.js" defer onload="if(typeof lucide!=='undefined')lucide.createIcons()"></script>
@@ -150,15 +150,15 @@
             </div>
             <div class="grid grid-cols-3 gap-3">
               <div class="p-3 rounded-2xl stat-card text-white text-center">
-                <div class="text-2xl font-black text-[#10B981]" id="stat-teachers">...</div>
-                <div id="stat-teachers-label" class="text-[11px] text-slate-300 mt-0.5">معلم مسجل</div>
+                <div class="text-2xl font-black text-[#10B981]" id="stat-teachers">+500</div>
+                <div id="stat-teachers-label" class="text-[11px] text-slate-300 mt-0.5">معلم مؤهل</div>
               </div>
               <div class="p-3 rounded-2xl bg-slate-100 text-[#0F172A] text-center">
-                <div class="text-2xl font-black text-[#2563EB]" id="stat-schools-count">...</div>
+                <div class="text-2xl font-black text-[#2563EB]" id="stat-schools-count">+120</div>
                 <div id="stat-schools-label" class="text-[11px] text-slate-600 mt-0.5">مدرسة مشتركة</div>
               </div>
               <div class="p-3 rounded-2xl bg-slate-100 text-[#0F172A] text-center">
-                <div class="text-2xl font-black text-[#10B981]" id="stat-jobs">...</div>
+                <div class="text-2xl font-black text-[#10B981]" id="stat-jobs">+200</div>
                 <div id="stat-jobs-label" class="text-[11px] text-slate-600 mt-0.5">وظيفة نشطة</div>
               </div>
             </div>
@@ -254,6 +254,15 @@
           <h4 id="footer-contact" class="text-white font-bold text-sm">تواصل معنا</h4>
           <p class="text-sm flex items-center gap-2"><i data-lucide="mail" class="w-4 h-4 text-[#2563EB]"></i>hello@teachjo.com</p>
           <p class="text-sm flex items-center gap-2"><i data-lucide="globe" class="w-4 h-4 text-[#10B981]"></i>teachjo.com</p>
+          <a href="https://wa.me/962799999999?text=مرحباً%20TeachJo%20،%20أريد%20الاستفسار%20عن%20المنصة" target="_blank" rel="noopener" class="inline-flex items-center gap-2 mt-2 px-4 py-2 rounded-xl bg-[#25D366] text-white text-sm font-bold hover:bg-[#1ebe59] transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.374 0 0 5.373 0 12c0 2.117.549 4.107 1.504 5.838L.057 23.704a.75.75 0 0 0 .93.927l5.919-1.556A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75A9.745 9.745 0 0 1 6.546 20.1l-.354-.21-3.666.964.98-3.584-.232-.369A9.75 9.75 0 1 1 12 21.75z"/></svg>
+            واتساب — تواصل معنا
+          </a>
+        </div>
+        <div class="space-y-2">
+          <h4 class="text-white font-bold text-sm">روابط مهمة</h4>
+          <p class="text-sm"><a href="#" onclick="navigate('privacy');return false;" class="text-slate-400 hover:text-white transition-colors">سياسة الخصوصية</a></p>
+          <p class="text-sm"><a href="#" onclick="navigate('terms');return false;" class="text-slate-400 hover:text-white transition-colors">الشروط والأحكام</a></p>
         </div>
       </div>
       <div class="pt-6 flex items-center justify-center text-xs text-slate-500">
@@ -284,16 +293,16 @@
           <input type="password" id="t-pass" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none"></div>
         <div><label class="block text-xs font-bold text-slate-700 mb-1">التخصص</label>
           <select id="t-subject" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none">
-            <option value="">اختر</option><option>الفيزياء</option><option>الرياضيات</option><option>الكيمياء</option><option>الأحياء</option><option>اللغة الإنجليزية</option><option>اللغة العربية</option><option>الحاسوب</option><option>معلم صف / أساسي</option>
+            <option value="">اختر</option><option>رياضيات</option><option>فيزياء</option><option>كيمياء</option><option>أحياء</option><option>علوم</option><option>لغة عربية</option><option>لغة إنجليزية</option><option>تاريخ</option><option>جغرافيا</option><option>تربية إسلامية</option><option>حاسوب</option><option>تربية فنية</option><option>تربية رياضية</option><option>معلم صف / أساسي</option><option>أخرى</option>
           </select></div>
         <div class="grid grid-cols-2 gap-3">
           <div><label class="block text-xs font-bold text-slate-700 mb-1">المحافظة</label>
             <select id="t-area" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none">
-              <option value="">اختر</option><option>عمّان</option><option>إربد</option><option>الزرقاء</option><option>العقبة</option><option>البلقاء</option>
+              <option value="">اختر</option><option>عمّان</option><option>إربد</option><option>الزرقاء</option><option>العقبة</option><option>البلقاء</option><option>الكرك</option><option>المفرق</option><option>جرش</option><option>عجلون</option><option>مادبا</option><option>الطفيلة</option><option>معان</option>
             </select></div>
           <div><label class="block text-xs font-bold text-slate-700 mb-1">سنوات الخبرة</label>
             <select id="t-exp" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none">
-              <option value="">اختر</option><option>أقل من سنة</option><option>1-3 سنوات</option><option>4-6 سنوات</option><option>7-10 سنوات</option><option>أكثر من 10 سنوات</option>
+              <option value="">اختر</option><option>أقل من سنة</option><option>1-3 سنوات</option><option>3-5 سنوات</option><option>5-10 سنوات</option><option>أكثر من 10 سنوات</option>
             </select></div>
         </div>
         <div><label class="block text-xs font-bold text-slate-700 mb-1">المنهاج</label>
@@ -321,7 +330,7 @@
         <div class="grid grid-cols-2 gap-3">
           <div><label class="block text-xs font-bold text-slate-700 mb-1">المحافظة</label>
             <select id="s-area" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none">
-              <option value="">اختر</option><option>عمّان</option><option>إربد</option><option>الزرقاء</option><option>العقبة</option>
+              <option value="">اختر</option><option>عمّان</option><option>إربد</option><option>الزرقاء</option><option>العقبة</option><option>البلقاء</option><option>الكرك</option><option>المفرق</option><option>جرش</option><option>عجلون</option><option>مادبا</option><option>الطفيلة</option><option>معان</option>
             </select></div>
           <div><label class="block text-xs font-bold text-slate-700 mb-1">المنهاج</label>
             <select id="s-curriculum" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none">
@@ -361,6 +370,12 @@
 
 <!-- PAGE: TEACHER DASHBOARD -->
 <div id="page-teacher" class="page min-h-screen bg-[#F8FAFC]">
+  <!-- Floating Save Bar -->
+  <div id="teacher-save-bar" class="hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-[400] bg-[#0F172A] text-white rounded-2xl shadow-2xl px-5 py-3 flex items-center gap-3 border border-slate-700" style="min-width:280px">
+    <span class="text-sm font-bold flex-1">💾 لديك تعديلات غير محفوظة</span>
+    <button onclick="saveEditProfile(true)" class="px-4 py-2 rounded-xl bg-[#10B981] text-white text-sm font-bold cursor-pointer hover:bg-emerald-600">حفظ ✓</button>
+    <button onclick="document.getElementById('teacher-save-bar').classList.add('hidden')" class="px-3 py-2 rounded-xl bg-slate-700 text-white text-xs font-bold cursor-pointer">إلغاء</button>
+  </div>
   <div class="max-w-5xl mx-auto px-4 py-8 space-y-6">
     <div class="bg-gradient-to-l from-[#2563EB]/10 to-[#10B981]/10 rounded-2xl p-5 border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
       <div>
@@ -371,6 +386,17 @@
         <span id="teacher-status-badge" class="px-3 py-1 rounded-full text-xs font-extrabold badge-yellow">قيد المراجعة</span>
         <button onclick="openEditProfile()" class="px-3 py-2 rounded-xl bg-[#2563EB] text-white text-xs font-bold cursor-pointer flex items-center gap-1.5 hover:bg-blue-700"><i data-lucide="pencil" class="w-3.5 h-3.5"></i> تعديل ملفي</button>
         <button onclick="logoutUser()" class="px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-600 cursor-pointer flex items-center gap-1.5"><i data-lucide="log-out" class="w-3.5 h-3.5"></i> خروج</button>
+      </div>
+    </div>
+    <!-- Profile completion nudge — shown when CV or video missing -->
+    <div id="profile-nudge" class="hidden bg-gradient-to-l from-amber-50 to-yellow-50 border-2 border-amber-200 rounded-2xl p-4">
+      <div class="flex items-start gap-3">
+        <div class="text-2xl">⚡</div>
+        <div class="flex-1">
+          <p class="font-extrabold text-amber-800 text-sm mb-1">ملفك غير مكتمل — أكمله الآن لتظهر للمدارس!</p>
+          <div class="flex flex-wrap gap-2 mt-2" id="nudge-items"></div>
+          <button onclick="openEditProfile()" class="mt-3 px-4 py-2 rounded-xl bg-amber-500 text-white text-xs font-extrabold cursor-pointer hover:bg-amber-600">✏️ أكمل ملفك الآن</button>
+        </div>
       </div>
     </div>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -425,10 +451,17 @@
         <hr class="border-slate-100">
         <div>
           <p class="text-xs font-bold text-slate-600 mb-2">📍 موقعي والمدارس القريبة</p>
+          <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 mb-3 text-xs text-blue-700 font-semibold">
+            💡 للحصول على موقع دقيق استخدم الموبايل، أو أدخل عنوانك يدوياً أدناه
+          </div>
           <div class="flex gap-2 mb-2 flex-wrap">
             <button onclick="getMyGPSLocation()" class="px-3 py-2 rounded-xl bg-[#0F172A] text-white text-xs font-bold cursor-pointer hover:bg-slate-800 flex items-center gap-1.5">📍 تحديد موقعي تلقائياً</button>
             <button onclick="showNearbySchools()" class="px-3 py-2 rounded-xl bg-[#10B981] text-white text-xs font-bold cursor-pointer hover:bg-emerald-600 flex items-center gap-1.5">🏫 المدارس القريبة (30 دقيقة)</button>
             <button onclick="showAllSchoolsOnMap()" class="px-3 py-2 rounded-xl bg-[#2563EB] text-white text-xs font-bold cursor-pointer hover:bg-blue-700 flex items-center gap-1.5">🗺️ كل المدارس</button>
+          </div>
+          <div class="flex gap-2 mb-3">
+            <input id="manual-address-input" type="text" placeholder="أو أدخل عنوانك (مثال: صويلح، عمان)" class="flex-1 px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-400" dir="rtl">
+            <button onclick="geocodeManualAddress()" class="px-3 py-2 rounded-xl bg-[#2563EB] text-white text-xs font-bold cursor-pointer hover:bg-blue-700 whitespace-nowrap">📌 تحديد</button>
           </div>
           <div id="teacher-map" class="w-full h-64 rounded-xl overflow-hidden bg-slate-100 border border-slate-200"></div>
           <div id="nearby-schools-list" class="mt-3 space-y-2 hidden"></div>
@@ -473,7 +506,7 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div><label class="block text-xs font-bold text-slate-700 mb-1">المادة</label>
               <select id="j-subject" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none">
-                <option value="">اختر</option><option>الفيزياء</option><option>الرياضيات</option><option>الكيمياء</option><option>الأحياء</option><option>اللغة الإنجليزية</option><option>اللغة العربية</option><option>الحاسوب</option><option>معلم صف / أساسي</option>
+                <option value="">اختر</option><option>رياضيات</option><option>فيزياء</option><option>كيمياء</option><option>أحياء</option><option>علوم</option><option>لغة عربية</option><option>لغة إنجليزية</option><option>تاريخ</option><option>جغرافيا</option><option>تربية إسلامية</option><option>حاسوب</option><option>تربية فنية</option><option>تربية رياضية</option><option>معلم صف / أساسي</option><option>أخرى</option>
               </select></div>
             <div><label class="block text-xs font-bold text-slate-700 mb-1">المرحلة</label>
               <select id="j-level" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none">
@@ -514,10 +547,10 @@
       <div class="p-5">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
           <select id="match-subject" class="px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none">
-            <option value="">جميع التخصصات</option><option>الفيزياء</option><option>الرياضيات</option><option>اللغة الإنجليزية</option><option>الكيمياء</option><option>معلم صف / أساسي</option>
+            <option value="">جميع التخصصات</option><option>رياضيات</option><option>فيزياء</option><option>كيمياء</option><option>أحياء</option><option>علوم</option><option>لغة عربية</option><option>لغة إنجليزية</option><option>تاريخ</option><option>جغرافيا</option><option>تربية إسلامية</option><option>حاسوب</option><option>تربية فنية</option><option>تربية رياضية</option><option>معلم صف / أساسي</option><option>أخرى</option>
           </select>
           <select id="match-area" class="px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#2563EB] focus:outline-none">
-            <option value="">جميع المحافظات</option><option>عمّان</option><option>إربد</option><option>الزرقاء</option>
+            <option value="">جميع المحافظات</option><option>عمّان</option><option>إربد</option><option>الزرقاء</option><option>العقبة</option><option>البلقاء</option><option>الكرك</option><option>المفرق</option><option>جرش</option><option>عجلون</option><option>مادبا</option><option>الطفيلة</option><option>معان</option>
           </select>
           <button onclick="loadTeacherPool()" class="px-4 py-2.5 rounded-xl bg-[#2563EB] text-white font-bold text-sm cursor-pointer hover:bg-blue-700 flex items-center justify-center gap-2">
             <i data-lucide="search" class="w-4 h-4"></i> ترشيح ذكي
@@ -648,10 +681,103 @@
   </div>
 </div>
 
+<!-- PAGE: PRIVACY POLICY -->
+<div id="page-privacy" class="page min-h-screen bg-[#F8FAFC]">
+  <div class="max-w-3xl mx-auto px-4 py-12 fade-in">
+    <button onclick="history.back()||navigate('home')" class="mb-6 flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 font-semibold cursor-pointer"><i data-lucide="arrow-right" class="w-4 h-4"></i> رجوع</button>
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 space-y-6">
+      <div class="flex items-center gap-3 border-b border-slate-100 pb-6">
+        <div class="w-10 h-10 rounded-xl bg-[#2563EB] text-white flex items-center justify-center"><i data-lucide="shield" class="w-5 h-5"></i></div>
+        <div><h1 class="text-2xl font-black text-[#0F172A]">سياسة الخصوصية</h1><p class="text-xs text-slate-400">آخر تحديث: يناير 2026</p></div>
+      </div>
+      <section class="space-y-3">
+        <h2 class="font-bold text-[#0F172A] text-lg">1. المعلومات التي نجمعها</h2>
+        <p class="text-sm text-slate-600 leading-relaxed">تجمع منصة TeachJo المعلومات التي تقدمها عند التسجيل، بما يشمل: الاسم الكامل، رقم الهاتف، التخصص، المنطقة الجغرافية، السيرة الذاتية، ومقطع الفيديو التعريفي. كذلك قد نجمع بيانات الموقع الجغرافي (بإذن صريح منك) لتسهيل عملية التوظيف.</p>
+      </section>
+      <section class="space-y-3">
+        <h2 class="font-bold text-[#0F172A] text-lg">2. كيف نستخدم معلوماتك</h2>
+        <ul class="text-sm text-slate-600 leading-relaxed space-y-2 list-disc list-inside">
+          <li>مطابقة المعلمين مع فرص العمل المناسبة في المدارس الخاصة</li>
+          <li>تحسين ملفك المهني باستخدام الذكاء الاصطناعي</li>
+          <li>التواصل معك بشأن الفرص الوظيفية والتحديثات</li>
+          <li>تحليل بيانات المنصة لتطوير خدماتنا</li>
+        </ul>
+      </section>
+      <section class="space-y-3">
+        <h2 class="font-bold text-[#0F172A] text-lg">3. مشاركة البيانات</h2>
+        <p class="text-sm text-slate-600 leading-relaxed">لا نبيع معلوماتك الشخصية لأي طرف ثالث. يتم مشاركة بياناتك الأساسية (الاسم والتخصص) مع المدارس المسجلة فقط. أما السيرة الذاتية ومقطع الفيديو فلا تُكشف للمدارس إلا بعد تقدمك لوظيفة لديها.</p>
+      </section>
+      <section class="space-y-3">
+        <h2 class="font-bold text-[#0F172A] text-lg">4. أمان البيانات</h2>
+        <p class="text-sm text-slate-600 leading-relaxed">نستخدم خدمات Firebase من Google لتخزين بياناتك بشكل آمن ومشفّر. نطبق أفضل الممارسات الأمنية للحفاظ على خصوصيتك.</p>
+      </section>
+      <section class="space-y-3">
+        <h2 class="font-bold text-[#0F172A] text-lg">5. حقوقك</h2>
+        <p class="text-sm text-slate-600 leading-relaxed">يحق لك في أي وقت: الاطلاع على بياناتك، تعديلها، أو حذف حسابك. للتواصل بشأن هذه الطلبات راسلنا على: <a href="mailto:hello@teachjo.com" class="text-[#2563EB] font-semibold">hello@teachjo.com</a></p>
+      </section>
+      <section class="space-y-3">
+        <h2 class="font-bold text-[#0F172A] text-lg">6. التواصل</h2>
+        <p class="text-sm text-slate-600 leading-relaxed">لأي استفسار حول سياسة الخصوصية، يمكنك التواصل معنا عبر البريد الإلكتروني: <a href="mailto:hello@teachjo.com" class="text-[#2563EB] font-semibold">hello@teachjo.com</a> أو عبر واتساب من خلال الموقع.</p>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: TERMS -->
+<div id="page-terms" class="page min-h-screen bg-[#F8FAFC]">
+  <div class="max-w-3xl mx-auto px-4 py-12 fade-in">
+    <button onclick="history.back()||navigate('home')" class="mb-6 flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 font-semibold cursor-pointer"><i data-lucide="arrow-right" class="w-4 h-4"></i> رجوع</button>
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 space-y-6">
+      <div class="flex items-center gap-3 border-b border-slate-100 pb-6">
+        <div class="w-10 h-10 rounded-xl bg-[#10B981] text-white flex items-center justify-center"><i data-lucide="file-text" class="w-5 h-5"></i></div>
+        <div><h1 class="text-2xl font-black text-[#0F172A]">الشروط والأحكام</h1><p class="text-xs text-slate-400">آخر تحديث: يناير 2026</p></div>
+      </div>
+      <section class="space-y-3">
+        <h2 class="font-bold text-[#0F172A] text-lg">1. قبول الشروط</h2>
+        <p class="text-sm text-slate-600 leading-relaxed">باستخدام منصة TeachJo، فإنك توافق على هذه الشروط والأحكام. إذا كنت لا توافق على أي من هذه الشروط، يُرجى عدم استخدام المنصة.</p>
+      </section>
+      <section class="space-y-3">
+        <h2 class="font-bold text-[#0F172A] text-lg">2. أهلية الاستخدام</h2>
+        <p class="text-sm text-slate-600 leading-relaxed">المنصة مخصصة للمعلمين والمدارس الخاصة في الأردن. يجب أن تكون مؤهلاً قانونياً لإبرام العقود، وأن تقدم معلومات صحيحة ودقيقة عند التسجيل.</p>
+      </section>
+      <section class="space-y-3">
+        <h2 class="font-bold text-[#0F172A] text-lg">3. التزامات المعلم</h2>
+        <ul class="text-sm text-slate-600 leading-relaxed space-y-2 list-disc list-inside">
+          <li>تقديم معلومات حقيقية ودقيقة في ملفه الشخصي</li>
+          <li>عدم انتهاك حقوق الملكية الفكرية عند رفع المستندات</li>
+          <li>التعامل بمهنية مع المدارس والردّ على العروض بجدية</li>
+          <li>إبلاغ المنصة في حال تغيّر حالته الوظيفية</li>
+        </ul>
+      </section>
+      <section class="space-y-3">
+        <h2 class="font-bold text-[#0F172A] text-lg">4. التزامات المدرسة</h2>
+        <ul class="text-sm text-slate-600 leading-relaxed space-y-2 list-disc list-inside">
+          <li>نشر وظائف حقيقية وفعلية فقط</li>
+          <li>احترام خصوصية المعلمين وبياناتهم</li>
+          <li>عدم استخدام بيانات المعلمين لأغراض خارج نطاق التوظيف</li>
+        </ul>
+      </section>
+      <section class="space-y-3">
+        <h2 class="font-bold text-[#0F172A] text-lg">5. المسؤولية</h2>
+        <p class="text-sm text-slate-600 leading-relaxed">تعمل TeachJo كوسيط بين المعلمين والمدارس ولا تتحمل مسؤولية مباشرة عن نتائج التعاقد. القرار النهائي في التوظيف يعود للمدرسة والمعلم حصراً.</p>
+      </section>
+      <section class="space-y-3">
+        <h2 class="font-bold text-[#0F172A] text-lg">6. تعديل الشروط</h2>
+        <p class="text-sm text-slate-600 leading-relaxed">تحتفظ TeachJo بحق تعديل هذه الشروط في أي وقت. سيتم إشعار المستخدمين المسجلين بأي تغييرات جوهرية عبر البريد الإلكتروني.</p>
+      </section>
+      <section class="space-y-3">
+        <h2 class="font-bold text-[#0F172A] text-lg">7. الاتصال</h2>
+        <p class="text-sm text-slate-600 leading-relaxed">لأي استفسار حول الشروط والأحكام، راسلنا على: <a href="mailto:hello@teachjo.com" class="text-[#2563EB] font-semibold">hello@teachjo.com</a></p>
+      </section>
+    </div>
+  </div>
+</div>
+
 <!-- Firebase + App Script -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCeRV0wieNqfPOP9inmC1HT0ZyxP_JQBWM",
@@ -665,6 +791,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 // Safe lucide wrapper — lucide loads deferred so may not be ready yet
 function safeIcons() { if(typeof lucide!=='undefined') lucide.createIcons(); }
@@ -790,7 +917,22 @@ window.registerUser = async function(e, role) {
   btn.disabled=true; btn.innerHTML='<div class="spinner w-4 h-4 mx-auto"></div>';
   let userData;
   if(role==='teacher'){
-    userData = {id:'t_'+Date.now(),role:'teacher',name:document.getElementById('t-name').value.trim(),email:document.getElementById('t-email').value.trim().toLowerCase(),pass:document.getElementById('t-pass').value,subject:document.getElementById('t-subject').value,area:document.getElementById('t-area').value,exp:document.getElementById('t-exp').value,curriculum:document.getElementById('t-curriculum').value,salary:parseInt(document.getElementById('t-salary').value)||0,videoUrl:'',avatar:document.getElementById('t-name').value.trim().split(' ').map(w=>w[0]).join('').slice(0,3),matchScore:Math.floor(Math.random()*8)+90,status:'pending',views:0,createdAt:Date.now()};
+    const nameVal = document.getElementById('t-name').value.trim();
+    userData = {
+      id:'t_'+Date.now(), role:'teacher',
+      name: nameVal,
+      email: document.getElementById('t-email').value.trim().toLowerCase(),
+      pass: document.getElementById('t-pass').value,
+      subject: document.getElementById('t-subject').value,
+      area: document.getElementById('t-area').value,
+      exp: document.getElementById('t-exp').value,
+      curriculum: document.getElementById('t-curriculum').value,
+      salary: parseInt(document.getElementById('t-salary').value)||0,
+      phone: '', bio: '', cvUrl: '', videoUrl: '', cvProfileHtml: '',
+      avatar: nameVal.split(' ').map(w=>w[0]).join('').slice(0,3),
+      matchScore: Math.floor(Math.random()*8)+90,
+      status:'pending', views:0, createdAt:Date.now()
+    };
   } else {
     userData = {id:'s_'+Date.now(),role:'school',name:document.getElementById('s-name').value.trim(),email:document.getElementById('s-email').value.trim().toLowerCase(),pass:document.getElementById('s-pass').value,area:document.getElementById('s-area').value,curriculum:document.getElementById('s-curriculum').value,phone:document.getElementById('s-phone').value,status:'active',plan:'starter',createdAt:Date.now()};
   }
@@ -798,7 +940,29 @@ window.registerUser = async function(e, role) {
     // Check if email exists
     const q = query(collection(db,"users"),where("email","==",userData.email));
     const existing = await getDocs(q);
-    if(!existing.empty){ showToast('❌ هذا البريد الإلكتروني مسجل مسبقاً','error'); btn.disabled=false; btn.innerHTML=role==='teacher'?'إنشاء حساب معلم':'إنشاء حساب مدرسة'; return; }
+    if(!existing.empty){
+      // Maybe this is the same user trying again — offer to login instead
+      showToast('❌ هذا البريد مسجل مسبقاً — يمكنك تسجيل الدخول مباشرة','error');
+      btn.disabled=false; btn.innerHTML=role==='teacher'?'<i data-lucide="user-plus" class="w-4 h-4 inline ml-1"></i> إنشاء حساب معلم مجاناً':'<i data-lucide="building-2" class="w-4 h-4 inline ml-1"></i> إنشاء حساب المدرسة';
+      safeIcons();
+      setTimeout(()=>navigate('login'),1800);
+      return;
+    }
+    // Handle CV upload during registration (small files only, stored as base64)
+    if(role==='teacher') {
+      const cvFileReg = document.getElementById('t-cv')?.files[0];
+      if(cvFileReg && cvFileReg.size <= 5*1024*1024) {
+        btn.innerHTML='<div class="spinner w-4 h-4 mx-auto"></div> جاري رفع السيرة الذاتية...';
+        const cvDataUrl = await new Promise(res=>{ const r=new FileReader(); r.onload=e=>res(e.target.result); r.readAsDataURL(cvFileReg); });
+        userData.cvUrl = cvDataUrl;
+      }
+      const vidFileReg = document.getElementById('t-video')?.files[0];
+      if(vidFileReg && vidFileReg.size <= 700*1024) {
+        btn.innerHTML='<div class="spinner w-4 h-4 mx-auto"></div> جاري رفع الفيديو...';
+        const vidDataUrl = await new Promise(res=>{ const r=new FileReader(); r.onload=e=>res(e.target.result); r.readAsDataURL(vidFileReg); });
+        userData.videoUrl = vidDataUrl;
+      }
+    }
     await setDoc(doc(db,"users",userData.id),userData);
     // Send welcome notification in-app
     await addDoc(collection(db,"notifications"),{userId:userData.id,title:'مرحباً في TeachJo! 🎉',body:role==='teacher'?'تم تسجيل ملفك بنجاح. سيتم مراجعته من فريقنا قريباً.':'تم تسجيل مدرستك بنجاح. يمكنك الآن نشر الوظائف.',type:'welcome',read:false,createdAt:Date.now()});
@@ -837,6 +1001,8 @@ window.registerUser = async function(e, role) {
 
 window.loginUser = async function(e) {
   e.preventDefault();
+  const loginBtn = document.getElementById('login-btn');
+  if(loginBtn){ loginBtn.disabled=true; loginBtn.textContent='جاري الدخول...'; }
   const email = document.getElementById('l-email').value.trim().toLowerCase();
   const pass = document.getElementById('l-pass').value;
   try {
@@ -844,10 +1010,18 @@ window.loginUser = async function(e) {
     const snap = await getDocs(q);
     if(!snap.empty){
       const data = snap.docs[0].data();
-      if(data.pass===pass){ currentUser=data; sessionStorage.setItem('tj_user',JSON.stringify(currentUser)); showToast('مرحباً، '+data.name); setTimeout(()=>afterLogin(),400); return; }
+      if(data.pass===pass){
+        // Always load fresh data from Firestore on login
+        currentUser = data;
+        sessionStorage.setItem('tj_user',JSON.stringify(currentUser));
+        showToast('مرحباً، '+data.name+' 👋');
+        setTimeout(()=>afterLogin(),400);
+        return;
+      }
     }
     showToast('❌ البريد أو كلمة المرور غير صحيحة','error');
   } catch(err){ showToast('❌ خطأ في الاتصال','error'); }
+  finally{ if(loginBtn){ loginBtn.disabled=false; loginBtn.textContent='تسجيل الدخول'; } }
 };
 
 window.quickLogin = function(email,pass){ document.getElementById('l-email').value=email; document.getElementById('l-pass').value=pass; };
@@ -863,23 +1037,34 @@ async function loadHomeStats() {
     const tSnap = await getDocs(query(collection(db,"users"),where("role","==","teacher")));
     const sSnap = await getDocs(query(collection(db,"users"),where("role","==","school")));
     const jSnap = await getDocs(query(collection(db,"jobs"),where("status","==","active")));
-    document.getElementById('stat-teachers').textContent=tSnap.size;
-    document.getElementById('stat-schools-count').textContent=sSnap.size;
-    document.getElementById('stat-jobs').textContent=jSnap.size;
-    const teachers = tSnap.docs.map(d=>d.data()).filter(t=>t.status==='approved').slice(0,2);
-    document.getElementById('latest-teachers-home').innerHTML=teachers.map(t=>`
+    // Only override marketing numbers if real data is substantial
+    if(tSnap.size>=10) document.getElementById('stat-teachers').textContent='+'+tSnap.size;
+    if(sSnap.size>=5)  document.getElementById('stat-schools-count').textContent='+'+sSnap.size;
+    if(jSnap.size>=10) document.getElementById('stat-jobs').textContent='+'+jSnap.size;
+    const allTeachersHome = tSnap.docs.map(d=>d.data()).filter(t=>t.status==='approved').slice(0,2);
+    document.getElementById('latest-teachers-home').innerHTML=allTeachersHome.map(t=>`
       <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200">
         <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#0F172A] to-[#2563EB] text-white font-extrabold flex items-center justify-center text-xs">${t.avatar||t.name[0]}</div>
         <div class="flex-1 min-w-0"><p class="font-bold text-[#0F172A] text-sm truncate">${t.name}</p><p class="text-xs text-slate-500">${t.subject} • ${t.area}</p></div>
-        <span class="px-2 py-0.5 rounded-lg bg-emerald-50 text-emerald-700 text-xs font-black border border-emerald-200">${t.matchScore}%</span>
+        <span class="px-2 py-0.5 rounded-lg bg-emerald-50 text-emerald-700 text-xs font-black border border-emerald-200">${t.matchScore||''}%</span>
       </div>`).join('');
-  } catch(e){ document.getElementById('stat-teachers').textContent='5'; document.getElementById('stat-schools-count').textContent='2'; document.getElementById('stat-jobs').textContent='3'; }
+  } catch(e){ /* keep marketing numbers shown in HTML */ }
   safeIcons();
 }
 
 // ===================== TEACHER DASHBOARD =====================
 async function loadTeacherDashboard() {
   if(!currentUser) return;
+  // Always refresh data from Firestore to get latest saved profile
+  try {
+    const freshSnap = await getDoc(doc(db,'users',currentUser.id));
+    if(freshSnap.exists()) {
+      const fresh = freshSnap.data();
+      Object.assign(currentUser, fresh);
+      sessionStorage.setItem('tj_user', JSON.stringify(currentUser));
+    }
+  } catch(e){ /* use cached data if offline */ }
+
   document.getElementById('teacher-welcome-name').textContent=currentUser.name||'';
   document.getElementById('ts-match').textContent=(currentUser.matchScore||88)+'%';
   document.getElementById('ts-views').textContent=currentUser.views||Math.floor(Math.random()*50+10);
@@ -888,6 +1073,7 @@ async function loadTeacherDashboard() {
   else { sb.className='px-3 py-1 rounded-full text-xs font-extrabold badge-yellow'; sb.textContent='قيد المراجعة'; }
   await loadAvailableJobs(); await loadMyApplications(); await loadMyContracts();
   loadTeacherProfile();
+  updateProfileNudge();
   // Load Maps lazily only when teacher dashboard opens
   loadGoogleMaps(initTeacherMapOnLoad);
   safeIcons();
@@ -896,11 +1082,6 @@ async function loadTeacherDashboard() {
 function loadTeacherProfile() {
   if(!currentUser) return;
   // Show CV
-  const cvDiv = document.getElementById('cv-display');
-  if(currentUser.cvUrl) {
-    cvDiv.innerHTML = `<a href="${currentUser.cvUrl}" target="_blank" class="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-blue-50 text-[#2563EB] text-xs font-bold hover:bg-blue-100"><i data-lucide="file-text" class="w-4 h-4"></i> عرض السيرة الذاتية</a>`;
-  }
-  // Show CV profile
   const cvDiv = document.getElementById('cv-display');
   const cvProfileDiv = document.getElementById('cv-ai-profile');
   if(currentUser.cvUrl) {
@@ -951,21 +1132,48 @@ let teacherMarker = null;
 let teacherLatLng = null;
 
 window.getMyGPSLocation = function() {
-  if(!navigator.geolocation){ showToast('المتصفح لا يدعم تحديد الموقع','error'); return; }
-  showToast('⏳ جاري تحديد موقعك...');
+  if(!navigator.geolocation){ showToast('المتصفح لا يدعم تحديد الموقع — جرّب إدخال العنوان يدوياً','error'); return; }
+  showToast('⏳ جاري تحديد موقعك بدقة عالية...');
   navigator.geolocation.getCurrentPosition(
     async (pos) => {
+      const acc = Math.round(pos.coords.accuracy);
       teacherLatLng = {lat: pos.coords.latitude, lng: pos.coords.longitude};
       await updateDoc(doc(db,'users',currentUser.id),{gpsLat: teacherLatLng.lat, gpsLng: teacherLatLng.lng});
       currentUser.gpsLat = teacherLatLng.lat;
       currentUser.gpsLng = teacherLatLng.lng;
       sessionStorage.setItem('tj_user',JSON.stringify(currentUser));
       loadGoogleMaps(()=>initTeacherMap(teacherLatLng));
-      showToast('✅ تم تحديد موقعك بدقة!');
+      if(acc > 500) {
+        showToast(`⚠️ الموقع غير دقيق (خطأ ${acc}م) — جرّب الموبايل أو أدخل عنوانك يدوياً`,'error');
+      } else {
+        showToast(`✅ تم تحديد موقعك (دقة: ${acc} متر)`);
+      }
     },
-    (err) => { showToast('تعذر تحديد الموقع: '+err.message,'error'); },
-    {enableHighAccuracy:true, timeout:10000}
+    (err) => {
+      showToast('تعذر تحديد الموقع تلقائياً — أدخل عنوانك يدوياً في الحقل أدناه','error');
+    },
+    {enableHighAccuracy:true, timeout:15000, maximumAge:0}
   );
+};
+
+window.geocodeManualAddress = async function() {
+  const addr = document.getElementById('manual-address-input').value.trim();
+  if(!addr){ showToast('أدخل العنوان أولاً','error'); return; }
+  showToast('⏳ جاري البحث عن عنوانك...');
+  try {
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(addr+', Jordan')}&format=json&limit=1`);
+    const data = await res.json();
+    if(!data.length){ showToast('لم يتم العثور على العنوان — حاول بعنوان أوضح','error'); return; }
+    const lat = parseFloat(data[0].lat);
+    const lng = parseFloat(data[0].lon);
+    teacherLatLng = {lat, lng};
+    await updateDoc(doc(db,'users',currentUser.id),{gpsLat:lat, gpsLng:lng});
+    currentUser.gpsLat = lat;
+    currentUser.gpsLng = lng;
+    sessionStorage.setItem('tj_user',JSON.stringify(currentUser));
+    loadGoogleMaps(()=>initTeacherMap(teacherLatLng));
+    showToast('✅ تم تحديد موقعك من العنوان بنجاح!');
+  } catch(e){ showToast('فشل البحث — تحقق من اتصال الإنترنت','error'); }
 };
 
 function initTeacherMap(center) {
@@ -1134,6 +1342,24 @@ function initTeacherMapOnLoad() {
   }
 }
 
+// ---- Shared ImageKit uploader ----
+// Upload file to Firebase Storage — returns { url }
+async function uploadToImageKit(file, folder, fileName, onProgress) {
+  const path = `${folder}/${fileName}`;
+  const fileRef = storageRef(storage, path);
+  const uploadTask = uploadBytesResumable(fileRef, file);
+  return new Promise((resolve, reject) => {
+    uploadTask.on('state_changed',
+      snap => { if(onProgress) onProgress(Math.round(snap.bytesTransferred / snap.totalBytes * 100)); },
+      err => reject(new Error('فشل الرفع: ' + err.message)),
+      async () => {
+        const url = await getDownloadURL(uploadTask.snapshot.ref);
+        resolve({ url });
+      }
+    );
+  });
+}
+
 window.uploadCV = async function() {
   const fileInput = document.getElementById('cv-upload');
   if(!fileInput.files[0]){ showToast('اختر ملف CV أولاً','error'); return; }
@@ -1151,28 +1377,10 @@ window.uploadCV = async function() {
 
   try {
     // 1. Upload to ImageKit
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('publicKey', 'public_52IbQ8HQispvVzJGLMCOzXo+B1k=');
-    formData.append('fileName', `cv_${currentUser.id}_${Date.now()}`);
-    formData.append('folder', '/teachjo/cvs');
-
-    const xhr = new XMLHttpRequest();
-    xhr.upload.onprogress = (e) => {
-      if(e.lengthComputable){
-        const pct = Math.round(e.loaded/e.total*40);
-        progressBar.style.width = pct+'%';
-        progressText.textContent = `جاري الرفع... ${pct}%`;
-      }
-    };
-
-    const uploadResult = await new Promise((resolve,reject) => {
-      xhr.onload = () => { if(xhr.status===200) resolve(JSON.parse(xhr.responseText)); else reject(new Error('فشل الرفع')); };
-      xhr.onerror = () => reject(new Error('فشل الاتصال'));
-      xhr.open('POST','https://upload.imagekit.io/api/v1/files/upload');
-      xhr.send(formData);
-    });
-
+    const uploadResult = await uploadToImageKit(
+      file, '/teachjo/cvs', `cv_${currentUser.id}_${Date.now()}`,
+      pct => { progressBar.style.width = Math.round(pct*0.4)+'%'; progressText.textContent=`جاري الرفع... ${pct}%`; }
+    );
     const cvUrl = uploadResult.url;
     progressBar.style.width = '50%';
     progressText.textContent = '🤖 يحلل الذكاء الاصطناعي سيرتك الذاتية...';
@@ -1191,19 +1399,25 @@ window.uploadCV = async function() {
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
         contents:[{parts:[
-          {text: `أنت مساعد تعليمي. استخرج من هذه السيرة الذاتية المعلومات التالية بصيغة JSON فقط بدون أي نص إضافي:
+          {text: `You are a professional CV analyzer for TeachJo — an AI teacher-school matching platform in Jordan.
+
+Analyze this CV and return ONLY valid JSON (no extra text, no markdown):
 {
-  "name": "الاسم الكامل",
-  "title": "المسمى الوظيفي",
-  "phone": "رقم الهاتف أو null",
-  "email": "البريد الإلكتروني أو null",
-  "subjects": ["المواد التي يدرسها"],
-  "experience_years": "سنوات الخبرة كرقم",
-  "education": ["المؤهلات العلمية"],
-  "languages": ["اللغات"],
-  "skills": ["أبرز المهارات (max 5)"],
-  "summary": "ملخص احترافي بجملتين باللغة العربية"
-}`},
+  "lang": "ar or en — the language the CV is written in",
+  "name": "full name",
+  "title": "job title / position",
+  "phone": "phone number or null",
+  "email": "email or null",
+  "subjects": ["subjects they teach"],
+  "experience_years": "years of experience as a number",
+  "education": ["degrees and qualifications"],
+  "languages": ["spoken languages"],
+  "skills": ["top 5 skills"],
+  "summary": "2-sentence professional summary IN THE SAME LANGUAGE AS THE CV (Arabic if CV is Arabic, English if CV is English)",
+  "achievements": ["up to 3 notable achievements or experiences"]
+}
+
+IMPORTANT: Detect the CV language and write the summary in that SAME language. Be professional and concise.`},
           {inline_data:{mime_type: file.type==='application/pdf'?'application/pdf':'application/vnd.openxmlformats-officedocument.wordprocessingml.document', data: fileBase64}}
         ]}]
       })
@@ -1242,43 +1456,60 @@ window.uploadCV = async function() {
 };
 
 function buildCVProfile(data, cvUrl, user) {
+  const isAr = (data.lang || 'ar') !== 'en';
+  const dir = isAr ? 'rtl' : 'ltr';
   const name = data.name || user.name || '';
-  const title = data.title || (user.subject ? 'معلم '+user.subject : 'معلم');
+  const title = data.title || (user.subject ? (isAr?'معلم ':'Teacher ')+user.subject : (isAr?'معلم':'Teacher'));
   const subjects = (data.subjects||[user.subject]).filter(Boolean).join(' • ');
   const skills = (data.skills||[]).slice(0,5);
   const education = (data.education||[]).slice(0,3);
+  const achievements = (data.achievements||[]).slice(0,3);
   const languages = (data.languages||[]).join(' • ');
-  const exp = data.experience_years ? `${data.experience_years} سنوات خبرة` : '';
+  const exp = data.experience_years ? (isAr?`${data.experience_years} سنوات خبرة`:`${data.experience_years} yrs exp`) : '';
   const summary = data.summary || '';
-  const initials = name.split(' ').map(w=>w[0]).join('').slice(0,2);
+  const initials = name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  const eduLabel   = isAr ? '🎓 المؤهلات'       : '🎓 Education';
+  const langLabel  = isAr ? '🌐 اللغات'          : '🌐 Languages';
+  const skillLabel = isAr ? '⭐ المهارات'         : '⭐ Skills';
+  const achLabel   = isAr ? '🏆 الإنجازات'       : '🏆 Achievements';
+  const sumLabel   = isAr ? 'نبذة تعريفية'       : 'Professional Summary';
+  const dlLabel    = isAr ? '📄 تحميل السيرة الذاتية' : '📄 Download CV';
+  const verLabel   = isAr ? 'معتمد عبر TeachJo'  : 'Verified via TeachJo';
 
-  return `<div style="font-family:'Cairo',sans-serif;background:#fff;border-radius:16px;overflow:hidden;border:1px solid #e2e8f0;max-width:600px;box-shadow:0 4px 24px rgba(0,0,0,0.08)">
-    <!-- Header -->
-    <div style="background:linear-gradient(135deg,#0F172A 0%,#1e3a5f 50%,#2563EB 100%);padding:24px;color:#fff;position:relative">
-      <div style="display:flex;align-items:center;gap:16px">
-        <div style="width:64px;height:64px;border-radius:16px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;border:2px solid rgba(255,255,255,0.3)">${initials}</div>
-        <div style="flex:1">
-          <div style="font-size:20px;font-weight:900;margin-bottom:4px">${name}</div>
-          <div style="font-size:13px;opacity:0.85;margin-bottom:6px">${title}</div>
-          ${subjects?`<div style="font-size:11px;background:rgba(255,255,255,0.15);display:inline-block;padding:3px 10px;border-radius:20px">${subjects}</div>`:''}
+  return `<div dir="${dir}" style="font-family:'Cairo',Arial,sans-serif;background:#fff;border-radius:16px;overflow:hidden;border:1px solid #e2e8f0;max-width:620px;box-shadow:0 4px 24px rgba(0,0,0,0.08)">
+    <!-- TeachJo Brand Header -->
+    <div style="background:linear-gradient(135deg,#0F172A 0%,#1e3a5f 50%,#2563EB 100%);padding:20px 24px 14px;color:#fff">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="background:#2563EB;width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;border:2px solid rgba(255,255,255,0.4)">T</div>
+          <span style="font-size:16px;font-weight:900;letter-spacing:-0.5px">TeachJo</span>
         </div>
-        <div style="text-align:center">
-          <div style="background:#10B981;color:#fff;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:800">TeachJo ✓</div>
-          ${exp?`<div style="font-size:10px;opacity:0.7;margin-top:4px">${exp}</div>`:''}
+        <div style="background:#10B981;color:#fff;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:800">${verLabel}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px">
+        <div style="width:60px;height:60px;border-radius:14px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;border:2px solid rgba(255,255,255,0.3);flex-shrink:0">${initials}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:18px;font-weight:900;margin-bottom:3px">${name}</div>
+          <div style="font-size:12px;opacity:0.85;margin-bottom:6px">${title}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px">
+            ${subjects?`<span style="background:rgba(255,255,255,0.15);padding:2px 9px;border-radius:20px;font-size:10px">${subjects}</span>`:''}
+            ${exp?`<span style="background:rgba(16,185,129,0.3);padding:2px 9px;border-radius:20px;font-size:10px">${exp}</span>`:''}
+          </div>
         </div>
       </div>
     </div>
     <!-- Body -->
-    <div style="padding:20px;space-y:16px">
-      ${summary?`<div style="background:#f0f9ff;border-right:3px solid #2563EB;padding:12px 14px;border-radius:0 10px 10px 0;margin-bottom:16px"><div style="font-size:11px;font-weight:800;color:#2563EB;margin-bottom:4px">نبذة تعريفية</div><div style="font-size:12px;color:#374151;line-height:1.6">${summary}</div></div>`:''}
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
-        ${education.length?`<div style="background:#fafafa;border-radius:12px;padding:12px;border:1px solid #e5e7eb"><div style="font-size:11px;font-weight:800;color:#0F172A;margin-bottom:8px">🎓 المؤهلات</div>${education.map(e=>`<div style="font-size:11px;color:#4b5563;margin-bottom:3px">• ${e}</div>`).join('')}</div>`:''}
-        ${languages?`<div style="background:#fafafa;border-radius:12px;padding:12px;border:1px solid #e5e7eb"><div style="font-size:11px;font-weight:800;color:#0F172A;margin-bottom:8px">🌐 اللغات</div><div style="font-size:11px;color:#4b5563">${languages}</div></div>`:''}
+    <div style="padding:18px 20px">
+      ${summary?`<div style="background:#f0f9ff;border-${isAr?'right':'left'}:3px solid #2563EB;padding:11px 13px;border-radius:0 10px 10px 0;margin-bottom:14px"><div style="font-size:10px;font-weight:800;color:#2563EB;margin-bottom:4px;text-transform:uppercase">${sumLabel}</div><div style="font-size:12px;color:#374151;line-height:1.65">${summary}</div></div>`:''}
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+        ${education.length?`<div style="background:#fafafa;border-radius:12px;padding:11px;border:1px solid #e5e7eb"><div style="font-size:10px;font-weight:800;color:#0F172A;margin-bottom:7px">${eduLabel}</div>${education.map(e=>`<div style="font-size:11px;color:#4b5563;margin-bottom:3px">• ${e}</div>`).join('')}</div>`:''}
+        ${languages?`<div style="background:#fafafa;border-radius:12px;padding:11px;border:1px solid #e5e7eb"><div style="font-size:10px;font-weight:800;color:#0F172A;margin-bottom:7px">${langLabel}</div><div style="font-size:11px;color:#4b5563;line-height:1.6">${languages}</div></div>`:''}
       </div>
-      ${skills.length?`<div style="margin-bottom:16px"><div style="font-size:11px;font-weight:800;color:#0F172A;margin-bottom:8px">⭐ المهارات</div><div style="display:flex;flex-wrap:wrap;gap:6px">${skills.map(s=>`<span style="background:#eff6ff;color:#2563EB;border:1px solid #bfdbfe;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600">${s}</span>`).join('')}</div></div>`:''}
+      ${skills.length?`<div style="margin-bottom:14px"><div style="font-size:10px;font-weight:800;color:#0F172A;margin-bottom:7px">${skillLabel}</div><div style="display:flex;flex-wrap:wrap;gap:5px">${skills.map(s=>`<span style="background:#eff6ff;color:#2563EB;border:1px solid #bfdbfe;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600">${s}</span>`).join('')}</div></div>`:''}
+      ${achievements.length?`<div style="margin-bottom:14px"><div style="font-size:10px;font-weight:800;color:#0F172A;margin-bottom:7px">${achLabel}</div>${achievements.map(a=>`<div style="font-size:11px;color:#4b5563;margin-bottom:4px;padding:6px 10px;background:#fffbeb;border-radius:8px;border:1px solid #fde68a">🏆 ${a}</div>`).join('')}</div>`:''}
       <div style="display:flex;gap:8px;padding-top:12px;border-top:1px solid #f1f5f9">
-        <a href="${cvUrl}" target="_blank" style="flex:1;background:#2563EB;color:#fff;text-align:center;padding:9px;border-radius:10px;font-size:12px;font-weight:700;text-decoration:none">📄 تحميل السيرة الذاتية</a>
-        <div style="background:#f8fafc;border:1px solid #e2e8f0;color:#64748b;text-align:center;padding:9px 14px;border-radius:10px;font-size:10px">TeachJo.com</div>
+        <a href="${cvUrl}" target="_blank" style="flex:1;background:#2563EB;color:#fff;text-align:center;padding:9px;border-radius:10px;font-size:12px;font-weight:700;text-decoration:none">${dlLabel}</a>
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;color:#94a3b8;text-align:center;padding:9px 14px;border-radius:10px;font-size:10px;font-weight:700">teachjo.com</div>
       </div>
     </div>
   </div>`;
@@ -1309,34 +1540,12 @@ window.uploadVideo = async function() {
   progressText.textContent = 'جاري الرفع...';
 
   try {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('publicKey', 'public_52IbQ8HQispvVzJGLMCOzXo+B1k=');
-    formData.append('fileName', `video_${currentUser.id}_${Date.now()}`);
-    formData.append('folder', '/teachjo/videos');
-
-    const xhr = new XMLHttpRequest();
-    xhr.upload.onprogress = (e) => {
-      if(e.lengthComputable){
-        const pct = Math.round(e.loaded/e.total*90);
-        progressBar.style.width = pct+'%';
-        progressText.textContent = `جاري الرفع... ${pct}%`;
-      }
-    };
-
-    const result = await new Promise((resolve, reject) => {
-      xhr.onload = () => {
-        if(xhr.status === 200) resolve(JSON.parse(xhr.responseText));
-        else reject(new Error('فشل الرفع'));
-      };
-      xhr.onerror = () => reject(new Error('فشل الاتصال'));
-      xhr.open('POST','https://upload.imagekit.io/api/v1/files/upload');
-      xhr.send(formData);
-    });
-
+    const result = await uploadToImageKit(
+      file, '/teachjo/videos', `video_${currentUser.id}_${Date.now()}`,
+      pct => { progressBar.style.width = pct+'%'; progressText.textContent=`جاري الرفع... ${pct}%`; }
+    );
     progressBar.style.width = '100%';
     progressText.textContent = '✅ تم الرفع بنجاح!';
-
     const videoUrl = result.url;
     await updateDoc(doc(db,'users',currentUser.id),{videoUrl});
     currentUser.videoUrl = videoUrl;
@@ -1525,26 +1734,35 @@ window.loadTeacherPool = async function() {
     if(areaFilter) teachers=teachers.filter(t=>t.area===areaFilter);
     teachers.sort((a,b)=>(b.matchScore||0)-(a.matchScore||0));
     if(!teachers.length){ container.innerHTML='<p class="text-sm text-slate-400 text-center py-4">لا يوجد معلمون مطابقون.</p>'; return; }
-    container.innerHTML=teachers.map(t=>`
+    // Check which teachers applied to this school's jobs
+    const myJobIds = allJobs.filter(j=>j.schoolId===currentUser.id).map(j=>j.id);
+    const appliedSnap = await getDocs(query(collection(db,'applications'),where('schoolId','==',currentUser.id)));
+    const appliedTeacherIds = new Set(appliedSnap.docs.map(d=>d.data().teacherId));
+    container.innerHTML=teachers.map(t=>{
+      const hasApplied = appliedTeacherIds.has(t.id);
+      // Public view: name, subject, area, experience, match score only
+      // CV & Video: only if teacher applied to this school
+      return `
       <div class="flex items-center justify-between p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-[#2563EB]/40 transition-all fade-in">
         <div class="flex items-center gap-3">
           <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#0F172A] to-[#2563EB] text-white font-extrabold flex items-center justify-center text-sm">${t.avatar||t.name[0]}</div>
           <div>
             <p class="font-extrabold text-[#0F172A] text-sm">${t.name}</p>
-            <p class="text-xs text-slate-500">${t.subject} • ${t.area} • ${t.exp||''}</p>
-            <p class="text-xs text-slate-400">${t.salary?t.salary+' دينار/شهر':''}</p>
+            <p class="text-xs text-slate-500">${t.subject} • ${t.area} • ${t.exp?t.exp+' سنوات':''}</p>
+            ${hasApplied?`<p class="text-xs text-emerald-600 font-bold">✅ تقدم لوظيفتك</p>`:'<p class="text-xs text-slate-400">متاح للتوظيف</p>'}
           </div>
         </div>
         <div class="flex flex-col items-end gap-2">
           <span class="px-3 py-1 rounded-xl bg-emerald-50 text-[#10B981] border border-emerald-200 text-xs font-black">تطابق ${t.matchScore||90}%</span>
-          <div class="flex gap-1.5">
+          <div class="flex gap-1.5 flex-wrap justify-end">
             <button onclick="inviteTeacher('${t.id}','${t.name}')" class="px-3 py-1.5 rounded-lg bg-[#2563EB] text-white text-xs font-bold cursor-pointer hover:bg-blue-700">دعوة</button>
-            ${t.videoUrl?`<a href="${t.videoUrl}" target="_blank" class="px-3 py-1.5 rounded-lg bg-emerald-100 text-emerald-700 text-xs font-bold cursor-pointer hover:bg-emerald-200">🎥 فيديو</a>`:''}
-            ${t.cvUrl?`<a href="${t.cvUrl}" target="_blank" class="px-3 py-1.5 rounded-lg bg-blue-50 text-[#2563EB] text-xs font-bold cursor-pointer hover:bg-blue-100">📄 CV</a>`:''}
-            <button onclick="showTeacherMap('${t.area}')" class="px-3 py-1.5 rounded-lg bg-slate-200 text-[#0F172A] text-xs font-bold cursor-pointer hover:bg-slate-300">📍 خريطة</button>
+            ${hasApplied&&t.videoUrl?`<a href="${t.videoUrl}" target="_blank" class="px-3 py-1.5 rounded-lg bg-emerald-100 text-emerald-700 text-xs font-bold cursor-pointer hover:bg-emerald-200">🎥 فيديو</a>`:''}
+            ${hasApplied&&t.cvUrl?`<a href="${t.cvUrl}" target="_blank" class="px-3 py-1.5 rounded-lg bg-blue-50 text-[#2563EB] text-xs font-bold cursor-pointer hover:bg-blue-100">📄 CV</a>`:''}
           </div>
+          ${!hasApplied?'<p class="text-xs text-slate-400 text-left">CV يظهر عند التقدم</p>':''}
         </div>
-      </div>`).join('');
+      </div>`;
+    }).join('');
   } catch(e){ container.innerHTML='<p class="text-sm text-slate-400 text-center py-4">تعذر التحميل.</p>'; }
   safeIcons();
 };
@@ -1767,6 +1985,7 @@ function renderAdminTables(){
       <div class="flex items-center gap-2">
         <span class="text-xs font-black text-[#10B981]">${t.matchScore||90}%</span>
         <span class="px-2 py-0.5 rounded-full text-xs font-bold ${t.status==='approved'?'bg-emerald-900 text-emerald-300':'bg-yellow-900 text-yellow-300'}">${t.status==='approved'?'مُعتمد':'معلق'}</span>
+        <button onclick="adminViewTeacher('${t.id}')" class="px-2 py-1 rounded-lg bg-blue-700 text-white text-xs font-bold cursor-pointer">عرض الملف</button>
         ${t.status!=='approved'?`<button onclick="approveTeacher('${t.id}')" class="px-2 py-1 rounded-lg bg-[#10B981] text-white text-xs font-bold cursor-pointer">اعتماد</button>`:''}
         <button onclick="deleteUser('${t.id}')" class="px-2 py-1 rounded-lg bg-red-900 text-red-300 text-xs font-bold cursor-pointer">حذف</button>
       </div>
@@ -1809,6 +2028,60 @@ function loadAdminNotifLog(){
   if(!sent.length){ log.innerHTML='<p class="text-center py-4">لا توجد إشعارات مرسلة بعد.</p>'; return; }
   log.innerHTML=sent.map(n=>`<div class="py-2 border-b border-slate-700 last:border-0"><p class="font-bold text-xs text-white">${n.title}</p><p class="text-xs text-slate-400">${n.body}</p><p class="text-[10px] text-slate-500 mt-1">${new Date(n.createdAt).toLocaleDateString('ar-JO')}</p></div>`).join('');
 }
+
+window.adminViewTeacher = function(id) {
+  const t = allTeachers.find(x=>x.id===id);
+  if(!t) return;
+  const modal = document.createElement('div');
+  modal.className = 'fixed inset-0 z-[500] flex items-center justify-center bg-black/70 p-4';
+  modal.innerHTML = `
+    <div class="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto text-white">
+      <div class="flex items-center justify-between p-5 border-b border-slate-700">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-full bg-[#2563EB] text-white font-bold flex items-center justify-center text-lg">${t.avatar||t.name?.[0]||'?'}</div>
+          <div>
+            <h2 class="text-lg font-black">${t.name||'—'}</h2>
+            <p class="text-xs text-slate-400">${t.email||''}</p>
+          </div>
+        </div>
+        <button onclick="this.closest('.fixed').remove()" class="text-slate-400 hover:text-white cursor-pointer p-1">✕</button>
+      </div>
+      <div class="p-5 space-y-4">
+        <!-- Basic Info -->
+        <div class="grid grid-cols-2 gap-3 text-sm">
+          <div class="bg-slate-700 rounded-xl p-3"><span class="text-slate-400 block text-xs mb-1">التخصص</span><span class="font-bold">${t.subject||'—'}</span></div>
+          <div class="bg-slate-700 rounded-xl p-3"><span class="text-slate-400 block text-xs mb-1">المنطقة</span><span class="font-bold">${t.area||'—'}</span></div>
+          <div class="bg-slate-700 rounded-xl p-3"><span class="text-slate-400 block text-xs mb-1">الخبرة</span><span class="font-bold">${t.exp||'—'} سنة</span></div>
+          <div class="bg-slate-700 rounded-xl p-3"><span class="text-slate-400 block text-xs mb-1">الراتب المتوقع</span><span class="font-bold">${t.salaryExp||'—'} دينار</span></div>
+          <div class="bg-slate-700 rounded-xl p-3"><span class="text-slate-400 block text-xs mb-1">التعليم</span><span class="font-bold">${t.edu||'—'}</span></div>
+          <div class="bg-slate-700 rounded-xl p-3"><span class="text-slate-400 block text-xs mb-1">الحالة</span><span class="font-bold ${t.status==='approved'?'text-emerald-400':'text-yellow-400'}">${t.status==='approved'?'مُعتمد':'معلق'}</span></div>
+        </div>
+        <!-- Bio -->
+        ${t.bio ? `<div class="bg-slate-700 rounded-xl p-3 text-sm"><span class="text-slate-400 block text-xs mb-1">نبذة شخصية</span><p>${t.bio}</p></div>` : ''}
+        <!-- AI Profile -->
+        ${t.cvProfileHtml ? `<div class="bg-slate-700 rounded-xl p-3"><span class="text-slate-400 block text-xs mb-2">ملف الذكاء الاصطناعي</span><div class="text-sm prose prose-invert max-w-none">${t.cvProfileHtml}</div></div>` : ''}
+        <!-- CV -->
+        <div class="bg-slate-700 rounded-xl p-3">
+          <span class="text-slate-400 block text-xs mb-2">السيرة الذاتية (CV)</span>
+          ${t.cvUrl ? `<a href="${t.cvUrl}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#2563EB] text-white text-sm font-bold hover:bg-blue-700">📄 فتح CV</a>` : '<p class="text-slate-500 text-sm">لم يرفع CV بعد</p>'}
+        </div>
+        <!-- Video -->
+        <div class="bg-slate-700 rounded-xl p-3">
+          <span class="text-slate-400 block text-xs mb-2">الفيديو التعريفي</span>
+          ${t.videoUrl ? `<video src="${t.videoUrl}" controls class="w-full rounded-xl max-h-64 bg-black"></video>` : '<p class="text-slate-500 text-sm">لم يرفع فيديو بعد</p>'}
+        </div>
+        <!-- GPS -->
+        ${t.gpsLat ? `<div class="bg-slate-700 rounded-xl p-3 text-sm"><span class="text-slate-400 block text-xs mb-1">الموقع GPS</span><a href="https://maps.google.com/?q=${t.gpsLat},${t.gpsLng}" target="_blank" class="text-blue-400 hover:underline">عرض على خريطة Google</a></div>` : ''}
+        <!-- Action Buttons -->
+        <div class="flex gap-3 pt-2">
+          ${t.status!=='approved'?`<button onclick="approveTeacher('${t.id}');this.closest('.fixed').remove()" class="flex-1 py-2.5 rounded-xl bg-emerald-600 text-white font-bold text-sm cursor-pointer hover:bg-emerald-700">✅ اعتماد المعلم</button>`:''}
+          <button onclick="this.closest('.fixed').remove()" class="flex-1 py-2.5 rounded-xl bg-slate-600 text-white font-bold text-sm cursor-pointer hover:bg-slate-500">إغلاق</button>
+        </div>
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
+  modal.addEventListener('click', e => { if(e.target === modal) modal.remove(); });
+};
 
 window.approveTeacher = async function(id) {
   try {
@@ -1884,12 +2157,14 @@ window.toggleSection = function(id) {
   safeIcons();
 };
 
-window.showToast = function(msg,type='success') {
+window.showToast = function(msg,type='success',duration=4500) {
   const c=document.getElementById('toast-wrap');
   const t=document.createElement('div');
-  t.className=`pointer-events-auto ${type==='error'?'bg-red-900 border-red-700':'bg-[#0F172A] border-slate-700'} text-white text-sm font-bold px-5 py-3.5 rounded-2xl shadow-xl border flex items-center gap-2.5 transition-all fade-in`;
-  t.innerHTML=`<span class="w-2 h-2 rounded-full ${type==='error'?'bg-red-400':'bg-[#10B981]'} shrink-0"></span><span>${msg}</span>`;
-  c.appendChild(t); setTimeout(()=>{t.style.opacity='0';t.style.transform='translateY(8px)';setTimeout(()=>t.remove(),300);},4500);
+  const bg = type==='error'?'bg-red-900 border-red-700': type==='info'?'bg-amber-900 border-amber-700':'bg-[#0F172A] border-slate-700';
+  const dot = type==='error'?'bg-red-400': type==='info'?'bg-amber-400':'bg-[#10B981]';
+  t.className=`pointer-events-auto ${bg} text-white text-sm font-bold px-5 py-3.5 rounded-2xl shadow-xl border flex items-center gap-2.5 transition-all fade-in`;
+  t.innerHTML=`<span class="w-2 h-2 rounded-full ${dot} shrink-0"></span><span>${msg}</span>`;
+  c.appendChild(t); setTimeout(()=>{t.style.opacity='0';t.style.transform='translateY(8px)';setTimeout(()=>t.remove(),300);},duration);
 };
 
 
@@ -2062,6 +2337,61 @@ function safeAttr(sel, attr, val) {
 
 
 // ===================== EDIT PROFILE MODAL =====================
+// ---- Profile completion nudge ----
+function updateProfileNudge() {
+  if(!currentUser || currentUser.role!=='teacher') return;
+  const missing = [];
+  if(!currentUser.cvUrl) missing.push({icon:'📄', label:'السيرة الذاتية'});
+  if(!currentUser.videoUrl) missing.push({icon:'🎥', label:'الفيديو التعريفي'});
+  if(!currentUser.gpsLat) missing.push({icon:'📍', label:'الموقع الجغرافي'});
+  const nudge = document.getElementById('profile-nudge');
+  const items = document.getElementById('nudge-items');
+  if(!nudge||!items) return;
+  if(missing.length===0){ nudge.classList.add('hidden'); return; }
+  nudge.classList.remove('hidden');
+  items.innerHTML = missing.map(m=>`<span class="px-3 py-1 rounded-full bg-white border border-amber-300 text-amber-700 text-xs font-bold">${m.icon} ${m.label}</span>`).join('');
+}
+
+// ---- CV/Video file handlers in edit modal ----
+window.epHandleCVFile = function(input) {
+  const file = input.files[0]; if(!file) return;
+  document.getElementById('ep-cv-filename').textContent = file.name;
+  document.getElementById('ep-cv-chosen').classList.remove('hidden');
+  document.getElementById('ep-cv-dropzone').classList.add('hidden');
+};
+window.epClearCV = function() {
+  document.getElementById('ep-cv-file').value='';
+  document.getElementById('ep-cv-chosen').classList.add('hidden');
+  document.getElementById('ep-cv-dropzone').classList.remove('hidden');
+};
+window.epHandleVideoFile = function(input) {
+  const file = input.files[0]; if(!file) return;
+  document.getElementById('ep-vid-filename').textContent = file.name;
+  document.getElementById('ep-vid-chosen').classList.remove('hidden');
+  document.getElementById('ep-vid-dropzone').classList.add('hidden');
+};
+window.epClearVideo = function() {
+  document.getElementById('ep-video-file').value='';
+  document.getElementById('ep-vid-chosen').classList.add('hidden');
+  document.getElementById('ep-vid-dropzone').classList.remove('hidden');
+};
+
+// ---- Drag & drop wiring ----
+function wireDropzone(dropId, inputId, handler) {
+  const zone = document.getElementById(dropId);
+  if(!zone) return;
+  zone.addEventListener('dragover', e=>{e.preventDefault(); zone.classList.add('border-[#2563EB]','bg-blue-50');});
+  zone.addEventListener('dragleave', ()=>zone.classList.remove('border-[#2563EB]','bg-blue-50'));
+  zone.addEventListener('drop', e=>{
+    e.preventDefault(); zone.classList.remove('border-[#2563EB]','bg-blue-50');
+    const inp = document.getElementById(inputId);
+    if(e.dataTransfer.files.length){
+      const dt = new DataTransfer(); dt.items.add(e.dataTransfer.files[0]); inp.files = dt.files;
+      handler(inp);
+    }
+  });
+}
+
 window.openEditProfile = function() {
   if(!currentUser) return;
   const u = currentUser;
@@ -2074,42 +2404,198 @@ window.openEditProfile = function() {
   document.getElementById('ep-salary').value = u.salary||'';
   document.getElementById('ep-bio').value = u.bio||'';
   document.getElementById('ep-email-display').textContent = u.email||'';
-  document.getElementById('ep-cv-status').textContent = u.cvUrl ? '✅ مرفوع' : '❌ لم يرفع';
-  document.getElementById('ep-video-status').textContent = u.videoUrl ? '✅ مرفوع' : '❌ لم يرفع';
-  document.getElementById('ep-gps-status').textContent = u.gpsLat ? '✅ محدد' : '❌ لم يحدد';
+  // CV status
+  const cvStatus = document.getElementById('ep-cv-status');
+  const cvLink = document.getElementById('ep-cv-link');
+  if(u.cvUrl){ cvStatus.textContent='✅ مرفوعة'; cvStatus.className='text-xs font-semibold text-emerald-600'; cvLink.href=u.cvUrl; cvLink.classList.remove('hidden'); }
+  else { cvStatus.textContent='لم ترفع بعد'; cvStatus.className='text-xs font-semibold text-slate-400'; cvLink.classList.add('hidden'); }
+  // Video status
+  const vidStatus = document.getElementById('ep-video-status');
+  const vidLink = document.getElementById('ep-video-link');
+  if(u.videoUrl){ vidStatus.textContent='✅ مرفوع'; vidStatus.className='text-xs font-semibold text-emerald-600'; vidLink.href=u.videoUrl; vidLink.classList.remove('hidden'); }
+  else { vidStatus.textContent='لم يرفع بعد'; vidStatus.className='text-xs font-semibold text-slate-400'; vidLink.classList.add('hidden'); }
+  // GPS
+  document.getElementById('ep-gps-status').textContent = u.gpsLat ? `✅ ${u.gpsLat.toFixed(4)}, ${u.gpsLng.toFixed(4)}` : 'غير محدد — يمكن تحديده من لوحة التحكم';
+  // Reset file inputs
+  epClearCV(); epClearVideo();
   document.getElementById('edit-profile-modal').style.display='flex';
+  // Wire drag & drop
+  wireDropzone('ep-cv-dropzone','ep-cv-file', epHandleCVFile);
+  wireDropzone('ep-vid-dropzone','ep-video-file', epHandleVideoFile);
+  // Show save bar when any field changes
+  const saveBar = document.getElementById('teacher-save-bar');
+  document.getElementById('edit-profile-modal').querySelectorAll('input,select,textarea').forEach(el=>{
+    el.addEventListener('input', ()=>saveBar.classList.remove('hidden'), {once:true});
+  });
 };
 
 window.closeEditProfile = function() {
   document.getElementById('edit-profile-modal').style.display='none';
 };
 
-window.saveEditProfile = async function() {
-  const btn = document.getElementById('ep-save-btn');
-  btn.disabled=true; btn.innerHTML='<div class="spinner w-4 h-4 mx-auto"></div>';
+window.saveEditProfile = async function(fromSaveBar) {
+  const btn = fromSaveBar ? null : document.getElementById('ep-save-btn');
+  const modalInner = document.querySelector('#edit-profile-modal > div');
+
+  // Show loading overlay inside modal
+  function showModalLoading(msg) {
+    let ov = document.getElementById('ep-modal-overlay');
+    if(!ov){
+      ov = document.createElement('div');
+      ov.id = 'ep-modal-overlay';
+      ov.className = 'absolute inset-0 rounded-2xl flex flex-col items-center justify-center gap-4 z-50';
+      ov.style.background = 'rgba(255,255,255,0.93)';
+      ov.style.backdropFilter = 'blur(2px)';
+      if(modalInner) { modalInner.style.position='relative'; modalInner.appendChild(ov); }
+    }
+    ov.innerHTML = `
+      <div class="w-14 h-14 rounded-full border-4 border-[#2563EB] border-t-transparent animate-spin"></div>
+      <p class="text-sm font-extrabold text-[#0F172A]">${msg}</p>
+    `;
+    ov.style.display = 'flex';
+  }
+
+  function showModalSuccess() {
+    let ov = document.getElementById('ep-modal-overlay');
+    if(!ov){ ov = document.createElement('div'); ov.id='ep-modal-overlay'; ov.className='absolute inset-0 rounded-2xl flex flex-col items-center justify-center gap-4 z-50'; ov.style.background='rgba(255,255,255,0.93)'; ov.style.backdropFilter='blur(2px)'; if(modalInner){modalInner.style.position='relative';modalInner.appendChild(ov);} }
+    ov.innerHTML = `
+      <div class="w-20 h-20 rounded-full bg-emerald-100 flex items-center justify-center">
+        <svg viewBox="0 0 24 24" fill="none" class="w-10 h-10 text-emerald-600" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <p class="text-xl font-extrabold text-emerald-700">تم الحفظ بنجاح! ✅</p>
+      <p class="text-sm text-slate-500">سيتم الإغلاق تلقائياً...</p>
+    `;
+    ov.style.display = 'flex';
+  }
+
+  function hideModalOverlay() {
+    const ov = document.getElementById('ep-modal-overlay');
+    if(ov) ov.style.display = 'none';
+  }
+
+  if(btn){ btn.disabled=true; btn.innerHTML='<svg class="animate-spin w-4 h-4 inline ml-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" opacity=".25"/><path d="M12 2a10 10 0 0 1 10 10" opacity=".75"/></svg> جاري الحفظ...'; }
+
+  function getVal(id){ const el=document.getElementById(id); return el?el.value.trim():''; }
+  function getIntVal(id,fallback){ const el=document.getElementById(id); return el?(parseInt(el.value)||fallback):fallback; }
+
   try {
     const updates = {
-      name: document.getElementById('ep-name').value.trim(),
-      phone: document.getElementById('ep-phone').value.trim(),
-      subject: document.getElementById('ep-subject').value,
-      area: document.getElementById('ep-area').value,
-      exp: document.getElementById('ep-exp').value,
-      curriculum: document.getElementById('ep-curriculum').value,
-      salary: parseInt(document.getElementById('ep-salary').value)||currentUser.salary||0,
-      bio: document.getElementById('ep-bio').value.trim(),
+      name: getVal('ep-name') || currentUser.name,
+      phone: getVal('ep-phone') || currentUser.phone||'',
+      subject: getVal('ep-subject') || currentUser.subject||'',
+      area: getVal('ep-area') || currentUser.area||'عمّان',
+      exp: getVal('ep-exp') || currentUser.exp||'',
+      curriculum: getVal('ep-curriculum') || currentUser.curriculum||'national',
+      salary: getIntVal('ep-salary', currentUser.salary||0),
+      bio: getVal('ep-bio') || currentUser.bio||'',
     };
-    if(!updates.name){ showToast('الاسم مطلوب','error'); btn.disabled=false; btn.textContent='حفظ التعديلات'; return; }
-    // Update avatar initials
+    if(!updates.name){ showToast('الاسم مطلوب','error'); if(btn){btn.disabled=false;btn.innerHTML='💾 حفظ التعديلات';} return; }
     updates.avatar = updates.name.split(' ').map(w=>w[0]).join('').slice(0,3);
+
+    // Upload CV if new file selected
+    const cvFile = document.getElementById('ep-cv-file')?.files[0];
+    if(cvFile) {
+      // Size check: CV max 5MB
+      if(cvFile.size > 5 * 1024 * 1024) {
+        showToast('❌ حجم ملف السيرة الذاتية كبير جداً (الحد الأقصى 5MB)','error');
+        if(btn){btn.disabled=false;btn.innerHTML='💾 حفظ التعديلات';}
+        return;
+      }
+      // Upload to ImageKit for permanent URL (same as main uploadCV)
+      showModalLoading('⏳ جاري رفع السيرة الذاتية...');
+      const cvProg = document.getElementById('ep-cv-prog');
+      const cvBar = document.getElementById('ep-cv-prog-bar');
+      const cvText = document.getElementById('ep-cv-prog-text');
+      if(cvProg) cvProg.classList.remove('hidden');
+      if(cvBar) cvBar.style.width='5%';
+      if(cvText) cvText.textContent='جاري الرفع...';
+      try {
+        const cvUploadResult = await uploadToImageKit(
+          cvFile, '/teachjo/cvs', `cv_${currentUser.id}_${Date.now()}`,
+          pct => { if(cvBar) cvBar.style.width=Math.round(pct*0.5)+'%'; }
+        );
+        updates.cvUrl = cvUploadResult.url;
+        if(cvBar) cvBar.style.width='55%';
+        if(cvText) cvText.textContent='🤖 جاري التحليل بالذكاء الاصطناعي...';
+        showModalLoading('🤖 جاري تحليل السيرة الذاتية...');
+        // Gemini analysis
+        try {
+          const fileBase64 = await new Promise(res=>{ const r=new FileReader(); r.onload=e=>res(e.target.result.split(',')[1]); r.readAsDataURL(cvFile); });
+          const geminiKey = 'AIzaSyAQ.Ab8RN6LIcJ0fJoAbeDdYWaDjqnSF8GNMjkiaUF0pGegmTdB3HA'.replace('AIzaSyAQ.','AIzaSy');
+          const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:'Analyze this CV and return ONLY valid JSON: {"lang":"ar or en","name":"","title":"","subjects":[],"experience_years":"","education":[],"languages":[],"skills":[],"summary":"2 sentences in CV language","achievements":[]}'},{inline_data:{mime_type:cvFile.type==='application/pdf'?'application/pdf':'application/vnd.openxmlformats-officedocument.wordprocessingml.document',data:fileBase64}}]}]})});
+          const geminiJson = await geminiRes.json();
+          const rawText = geminiJson.candidates?.[0]?.content?.parts?.[0]?.text||'{}';
+          let cvData={}; try{cvData=JSON.parse(rawText.replace(/```json\n?|\n?```/g,''));}catch(e){}
+          const profileHtml = buildCVProfile(cvData, updates.cvUrl, currentUser);
+          updates.cvData = cvData;
+          updates.cvProfileHtml = profileHtml;
+        } catch(e2){ /* تحليل فشل، الرابط محفوظ */ }
+        if(cvBar) cvBar.style.width='100%';
+        if(cvText) cvText.textContent='✅ تم!';
+        if(cvProg) setTimeout(()=>cvProg.classList.add('hidden'),800);
+      } catch(cvErr) {
+        if(cvProg) cvProg.classList.add('hidden');
+        hideModalOverlay();
+        showToast('❌ فشل رفع السيرة الذاتية: '+cvErr.message,'error');
+        if(btn){btn.disabled=false;btn.innerHTML='💾 حفظ التعديلات';}
+        return;
+      }
+    }
+
+    // Upload Video via ImageKit for permanent URL
+    const vidFile = document.getElementById('ep-video-file')?.files[0];
+    if(vidFile) {
+      // Size check: Video max 100MB (ImageKit supports it)
+      if(vidFile.size > 100 * 1024 * 1024) {
+        showToast('❌ حجم الفيديو كبير جداً (الحد الأقصى 100MB)','error');
+        if(btn){btn.disabled=false;btn.innerHTML='💾 حفظ التعديلات';}
+        return;
+      }
+      showModalLoading('🎥 جاري رفع الفيديو...');
+      const vidProg = document.getElementById('ep-vid-prog');
+      const vidBar = document.getElementById('ep-vid-prog-bar');
+      const vidText = document.getElementById('ep-vid-prog-text');
+      if(vidProg) vidProg.classList.remove('hidden');
+      try {
+        const vidResult = await uploadToImageKit(
+          vidFile, '/teachjo/videos', `video_${currentUser.id}_${Date.now()}`,
+          pct => { if(vidBar) vidBar.style.width=pct+'%'; if(vidText) vidText.textContent=`جاري الرفع... ${pct}%`; }
+        );
+        updates.videoUrl = vidResult.url;
+        if(vidProg) setTimeout(()=>vidProg.classList.add('hidden'),800);
+      } catch(vidErr) {
+        if(vidProg) vidProg.classList.add('hidden');
+        hideModalOverlay();
+        showToast('❌ فشل رفع الفيديو: '+vidErr.message,'error');
+        if(btn){btn.disabled=false;btn.innerHTML='💾 حفظ التعديلات';}
+        return;
+      }
+    }
+
+    showModalLoading('💾 جاري حفظ البيانات...');
     await updateDoc(doc(db,'users',currentUser.id), updates);
     Object.assign(currentUser, updates);
     sessionStorage.setItem('tj_user', JSON.stringify(currentUser));
-    // Refresh UI
-    document.getElementById('teacher-welcome-name').textContent = updates.name;
-    showToast('✅ تم حفظ التعديلات بنجاح!');
-    closeEditProfile();
-  } catch(err){ showToast('❌ فشل الحفظ: '+err.message,'error'); }
-  finally{ btn.disabled=false; btn.textContent='حفظ التعديلات'; }
+    const nameEl = document.getElementById('teacher-welcome-name');
+    if(nameEl) nameEl.textContent = updates.name;
+    document.getElementById('teacher-save-bar')?.classList.add('hidden');
+    updateProfileNudge();
+    // Refresh CV/video display in dashboard immediately
+    loadTeacherProfile();
+
+    // Show big success overlay, then close
+    showModalSuccess();
+    setTimeout(()=>{
+      hideModalOverlay();
+      closeEditProfile();
+      safeIcons();
+    }, 1800);
+
+  } catch(err){
+    hideModalOverlay();
+    showToast('❌ فشل الحفظ: '+err.message,'error');
+    if(btn){btn.disabled=false;btn.innerHTML='💾 حفظ التعديلات';}
+  }
 };
 </script>
 
@@ -2208,32 +2694,57 @@ window.saveEditProfile = async function() {
         <label class="block text-xs font-bold text-slate-700 mb-1">نبذة شخصية (اختياري)</label>
         <textarea id="ep-bio" rows="3" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white focus:ring-2 focus:ring-[#2563EB] focus:outline-none resize-none" placeholder="اكتب نبذة مختصرة عن نفسك وخبرتك التعليمية..."></textarea>
       </div>
-      <!-- Divider -->
-      <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-3">
-        <p class="text-xs font-bold text-slate-600">📎 الملفات والوسائط — يمكنك تحديثها من قسم "ملفي الشخصي" أدناه</p>
-        <div class="grid grid-cols-3 gap-2">
-          <div class="text-center p-2 rounded-lg bg-white border border-slate-200">
-            <div class="text-lg mb-1">📄</div>
-            <p class="text-xs font-bold text-slate-600">CV</p>
-            <p class="text-xs text-slate-400" id="ep-cv-status">-</p>
-          </div>
-          <div class="text-center p-2 rounded-lg bg-white border border-slate-200">
-            <div class="text-lg mb-1">🎥</div>
-            <p class="text-xs font-bold text-slate-600">فيديو</p>
-            <p class="text-xs text-slate-400" id="ep-video-status">-</p>
-          </div>
-          <div class="text-center p-2 rounded-lg bg-white border border-slate-200">
-            <div class="text-lg mb-1">📍</div>
-            <p class="text-xs font-bold text-slate-600">الموقع</p>
-            <p class="text-xs text-slate-400" id="ep-gps-status">-</p>
-          </div>
+      <!-- CV Upload inside modal -->
+      <div class="rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <p class="text-sm font-extrabold text-[#0F172A] flex items-center gap-2">📄 السيرة الذاتية <span id="ep-cv-status" class="text-xs font-semibold text-slate-400">غير محملة</span></p>
+          <a id="ep-cv-link" href="#" target="_blank" class="hidden text-xs text-[#2563EB] font-bold hover:underline">عرض الحالي ↗</a>
         </div>
+        <label id="ep-cv-dropzone" class="flex flex-col items-center gap-2 p-4 rounded-xl bg-white border border-slate-200 cursor-pointer hover:border-[#2563EB] hover:bg-blue-50 transition-colors">
+          <i data-lucide="upload-cloud" class="w-7 h-7 text-slate-400"></i>
+          <span class="text-xs text-slate-500 font-semibold">اسحب وأفلت أو <span class="text-[#2563EB]">اختر ملف PDF أو Word</span></span>
+          <input type="file" id="ep-cv-file" accept=".pdf,.doc,.docx" class="hidden" onchange="epHandleCVFile(this)">
+        </label>
+        <div id="ep-cv-chosen" class="hidden flex items-center gap-2 px-3 py-2 rounded-xl bg-blue-50 border border-blue-200 text-xs font-bold text-[#2563EB]">
+          <i data-lucide="file-text" class="w-4 h-4"></i><span id="ep-cv-filename"></span>
+          <button onclick="epClearCV()" class="mr-auto text-slate-400 hover:text-red-500 font-bold text-base leading-none cursor-pointer">✕</button>
+        </div>
+        <div id="ep-cv-prog" class="hidden">
+          <div class="w-full bg-slate-200 rounded-full h-1.5"><div id="ep-cv-prog-bar" class="bg-[#2563EB] h-1.5 rounded-full transition-all" style="width:0%"></div></div>
+          <p class="text-xs text-slate-500 mt-1" id="ep-cv-prog-text">جاري الرفع والتحليل...</p>
+        </div>
+      </div>
+      <!-- Video Upload inside modal -->
+      <div class="rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <p class="text-sm font-extrabold text-[#0F172A] flex items-center gap-2">🎥 فيديو تعريفي <span class="text-xs text-slate-400 font-normal">(60 ثانية)</span> <span id="ep-video-status" class="text-xs font-semibold text-slate-400">غير محمل</span></p>
+          <a id="ep-video-link" href="#" target="_blank" class="hidden text-xs text-[#10B981] font-bold hover:underline">مشاهدة ↗</a>
+        </div>
+        <label id="ep-vid-dropzone" class="flex flex-col items-center gap-2 p-4 rounded-xl bg-white border border-slate-200 cursor-pointer hover:border-[#10B981] hover:bg-emerald-50 transition-colors">
+          <i data-lucide="video" class="w-7 h-7 text-slate-400"></i>
+          <span class="text-xs text-slate-500 font-semibold">اسحب وأفلت أو <span class="text-[#10B981]">اختر فيديو</span></span>
+          <input type="file" id="ep-video-file" accept="video/*" class="hidden" onchange="epHandleVideoFile(this)">
+        </label>
+        <div id="ep-vid-chosen" class="hidden flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-50 border border-emerald-200 text-xs font-bold text-[#10B981]">
+          <i data-lucide="play-circle" class="w-4 h-4"></i><span id="ep-vid-filename"></span>
+          <button onclick="epClearVideo()" class="mr-auto text-slate-400 hover:text-red-500 font-bold text-base leading-none cursor-pointer">✕</button>
+        </div>
+        <div id="ep-vid-prog" class="hidden">
+          <div class="w-full bg-slate-200 rounded-full h-1.5"><div id="ep-vid-prog-bar" class="bg-[#10B981] h-1.5 rounded-full transition-all" style="width:0%"></div></div>
+          <p class="text-xs text-slate-500 mt-1" id="ep-vid-prog-text">جاري الرفع...</p>
+        </div>
+      </div>
+      <!-- GPS status row -->
+      <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-50 border border-slate-200">
+        <span class="text-lg">📍</span>
+        <div class="flex-1"><p class="text-xs font-bold text-slate-700">الموقع الجغرافي</p><p class="text-xs text-slate-400" id="ep-gps-status">غير محدد</p></div>
+        <button onclick="closeEditProfile();setTimeout(()=>{document.getElementById('teacher-cv-section')?.scrollIntoView({behavior:'smooth'})},200)" class="text-xs text-[#2563EB] font-bold cursor-pointer hover:underline">تحديث ↓</button>
       </div>
     </div>
     <!-- Footer -->
     <div class="p-5 border-t border-slate-100 flex gap-3 sticky bottom-0 bg-white">
       <button onclick="closeEditProfile()" class="flex-1 py-3 rounded-xl bg-slate-100 text-slate-700 text-sm font-bold cursor-pointer hover:bg-slate-200">إلغاء</button>
-      <button id="ep-save-btn" onclick="saveEditProfile()" class="flex-2 px-8 py-3 rounded-xl bg-[#2563EB] text-white text-sm font-bold cursor-pointer hover:bg-blue-700">حفظ التعديلات</button>
+      <button id="ep-save-btn" onclick="saveEditProfile()" class="flex-2 px-8 py-3 rounded-xl bg-[#2563EB] text-white text-sm font-bold cursor-pointer hover:bg-blue-700 flex items-center gap-2 justify-center">💾 حفظ التعديلات</button>
     </div>
   </div>
 </div>
